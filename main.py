@@ -7,15 +7,25 @@
 
 ### IMPORTS ###
 
-import sys, pygame
+import pygame
+import sys
+import typing
+
+
+### CONSTANTS ###
+
+EXIT_SUCCESS = 0
 
 
 ### MAIN FUNCTION DEFINITION ###
 
-def main(argv):
+def main(argv: list[str], argc: int) -> int:
     print('Hello world!')
+    
+    if argc > 1:
+        print(argv)
 
-    return 0
+    return EXIT_SUCCESS
 
 
 ### CORE FUNCTIONS ###
@@ -32,4 +42,6 @@ def main(argv):
 
 if __name__ == '__main__':
     pygame.init()
-    sys.exit(main(sys.argv))
+    argv: list[str] = sys.argv
+    argc: int = len(argv)
+    sys.exit(main(argv, argc))
