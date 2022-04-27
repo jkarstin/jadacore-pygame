@@ -32,7 +32,7 @@ def main(argv: list[str], argc: int) -> int:
         for event in pygame.event.get():
             if event.type == pygame.QUIT: return EXIT_SUCCESS
         
-        ballrect = ballrect.move(0.25, 0.25)
+        ballrect = ballrect.move(speed)
         if ballrect.left < 0 or ballrect.right > width:
             speed[0] = -speed[0]
         if ballrect.top < 0 or ballrect.bottom > height:
