@@ -1,7 +1,7 @@
 #################################
 # main.py
 #-------------------------------
-# J Karstin Neill    MM.DD.YYYY
+# J Karstin Neill    04.27.2022
 #################################
 
 
@@ -9,7 +9,6 @@
 
 import pygame
 import sys
-import typing
 
 
 ### CONSTANTS ###
