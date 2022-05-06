@@ -27,7 +27,7 @@ LOG_STYLE_ERROR = Stylist.style('red', 'underline')
 ### MAIN FUNCTION DEFINITION ###
 
 def main(argv: list[str], argc: int) -> int:
-    img = processArgv(argv, argc)
+    processArgv(argv, argc)
 
     game: Game = Game()
     game.run()
@@ -41,9 +41,7 @@ def main(argv: list[str], argc: int) -> int:
 ### UTILITY FUNCTIONS ###
 
 def processArgv(argv: list[str], argc: int) -> str:
-    if argc <= 1:
-        error('Requires at least one argument!')
-    return argv[1]
+    return None
 
 
 def error(msg: str, err_code: int=ERROR_GENERIC) -> None:
