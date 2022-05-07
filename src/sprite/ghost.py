@@ -10,13 +10,9 @@
 ### IMPORTS ###
 
 from pathlib import Path
-import pygame
-from pygame import Rect
-from pygame import Surface
-from pygame import Vector2
-from pygame.sprite import Sprite
+from pygame import Color, Vector2
 
-from meta import PIXEL_SIZE, RESOURCES_PATH
+from . import Being
 
 
 ### CONSTANTS & FLAGS ###
@@ -24,42 +20,25 @@ from meta import PIXEL_SIZE, RESOURCES_PATH
 
 ### CLASS DEFINITIONS ###
 
-class Ghost(Sprite):
+class Ghost(Being):
 
     ### FIELDS ###
 
-    image: Surface = None
-    rect: Rect     = None
-    pos: Vector2   = None
-
-    move_vect: Vector2 = None
 
     ### CONSTRUCTOR ###
 
-    def __init__(self, ghost_path: Path, pos: Vector2=None):
-        Sprite.__init__(self)
-
-        image_raw: Surface = pygame.image.load(RESOURCES_PATH / ghost_path).convert_alpha()
-        self.image = pygame.transform.scale(
-            image_raw,
-            (image_raw.get_width() * PIXEL_SIZE, image_raw.get_height() * PIXEL_SIZE)
-        )
-        self.rect = self.image.get_rect()
-
-        self.pos = pos if pos else Vector2()
+    def __init__(
+        self,
+        ghost_path: Path,
+        pos: Vector2=None,
+        size: Vector2=None,
+        color: Color=None,
+        **kwargs
+    ) -> None:
+        Being.__init__(self, pos, size, color, image_path=ghost_path, **kwargs)
     
 
     ### METHODS ###
 
-    def update(self, dt: float):
-        if self.move_vect:
-            self.pos.x += self.move_vect.x * dt
-            self.pos.y += self.move_vect.y * dt
-            self.move_vect = None
-
-        self.rect.x = int(self.pos.x / PIXEL_SIZE) * PIXEL_SIZE
-        self.rect.y = int(self.pos.y / PIXEL_SIZE) * PIXEL_SIZE
-
-    
-    def move(self, move_vect: Vector2=None):
-        self.move_vect = move_vect
+    def update(self, dt: float) -> None:
+        super().update(dt)
