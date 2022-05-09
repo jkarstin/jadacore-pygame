@@ -1,4 +1,7 @@
-GG/
+#.GG.egg
+.GG/
+
+# pygame.egg
 env/
 *.ps1
 __pycache__/

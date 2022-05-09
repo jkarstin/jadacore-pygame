@@ -15,7 +15,7 @@ from pygame import Color, Surface, Rect, Vector2
 from pygame.sprite import Group, Sprite
 from typing import Union
 
-from meta.meta import PIXEL_SIZE, RESOURCES_PATH
+from meta import PIXEL_SIZE, RESOURCES_PATH
 
 
 ### CLASS DEFINITIONS ###
