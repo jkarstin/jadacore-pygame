@@ -40,9 +40,10 @@ class World:
     ### OPERATIONAL FUNCTIONS ###
 
     def setup(self) -> None: pass
+    def update(self, dt: float) -> None: pass
 
 
-    def update(self, dt: float) -> None:
+    def update_world(self, dt: float) -> None:
         self.world_group.update(dt)
 
     

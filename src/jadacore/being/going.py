@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.09.2022 #
+# J Karstin Neill    05.10.2022 #
 #################################
 
 
@@ -28,10 +28,9 @@ class Going(Doing):
 
     def __init__(
         self,
-        *args,
         **kwargs
     ) -> None:
-        Doing.__init__(self, *args, **kwargs)
+        Doing.__init__(self, **kwargs)
 
 
     ### METHODS ###

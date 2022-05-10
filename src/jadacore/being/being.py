@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.09.2022 #
+# J Karstin Neill    05.10.2022 #
 #################################
 
 
@@ -14,7 +14,7 @@ import pygame
 from pygame import Color, Surface, Rect, Vector2
 from pygame.sprite import Group, Sprite
 
-from jadacore.meta import PIXEL_SIZE, RESOURCES_PATH
+from jadacore.meta import RESOURCES_PATH, PIXEL_SIZE
 
 
 ### CLASS DEFINITIONS ###
@@ -39,7 +39,7 @@ class Being(Sprite):
         size: Vector2=Vector2(1, 1),
         color: Color=None,
         image_path: Path=None,
-        *groups: Group
+        groups: list[Group]=None
     ) -> None:
         Sprite.__init__(self)
 
@@ -58,8 +58,8 @@ class Being(Sprite):
         
         self.rect = self.image.get_rect()
 
-        for group in groups:
-            group.add(self)
+        if groups:
+            for group in groups: group.add(self)
 
 
     ### OPERATIONAL METHODS ###

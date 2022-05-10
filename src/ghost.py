@@ -3,36 +3,22 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.09.2022 #
+# J Karstin Neill    05.10.2022 #
 #################################
 
 
 ### IMPORTS ###
 
-from pathlib import Path
+from pygame import Vector2
 
 from jadacore.being import Doing
-
-
-### CONSTANTS & FLAGS ###
 
 
 ### CLASS DEFINITIONS ###
 
 class Ghost(Doing):
 
-    ### FIELDS ###
-
-
     ### CONSTRUCTOR ###
 
-    def __init__(
-        self,
-        ghost_path: Path,
-        *args,
-        **kwargs
-    ) -> None:
-        Doing.__init__(self, ghost_path, *args, **kwargs)
-
-
-    ### METHODS ###
+    def __init__(self, **kwargs) -> None:
+        Doing.__init__(self, 'ghost.ss.gif', sprite_sheet_size=Vector2(2, 2), **kwargs)

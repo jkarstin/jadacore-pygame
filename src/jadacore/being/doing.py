@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.09.2022 #
+# J Karstin Neill    05.10.2022 #
 #################################
 
 
@@ -35,10 +35,9 @@ class Doing(Being):
         sprite_sheet_size: Vector2=Vector2(1),
         frames_per_second: float=2,
         animation_style: int=Animation.ANIM_STYLE_LOOP,
-        *args,
         **kwargs
     ) -> None:
-        Being.__init__(self, *args, **kwargs)
+        Being.__init__(self, **kwargs)
 
         self.animation = Animation(
             sprite_sheet_path,

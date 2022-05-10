@@ -1,25 +1,42 @@
+###################################
+# test_world.py    [v0.0.1-alpha] #
+#=================================#
+#                                 #
+#---------------------------------#
+# J Karstin Neill      05.10.2022 #
+###################################
+
+
+### IMPORTS ###
 
 from pygame import Vector2
 
+from jadacore.being import Being
 from jadacore.game import World
 
-from block import Block
 from ghost import Ghost
 
 
+### CLASS DEFINITIONS ###
+
 class TestWorld(World):
 
-    block: Block = None
+    ### FIELDS ###
+
+    being: Being = None
     ghost: Ghost = None
 
 
+    ### OPERATIONAL METHODS ###
+
     def setup(self):
-        self.block = Block()
-        self.ghost = Ghost('ghost.ss.gif', sprite_sheet_size=Vector2(2, 2), pos=Vector2(650, 125))
-        self.add(self.block, self.ghost)
+        self.being = Being()
+        self.ghost = Ghost(pos=Vector2(650, 125))
+        self.add(self.being, self.ghost)
 
     
     def update(self, dt: float):
-        self.block.move(Vector2(80, 45))
+        self.being.move(Vector2(80, 45))
         self.ghost.move(Vector2(-5, 0.0))
-        self.world_group.update(dt)
+        self.update_world(dt)
+        
