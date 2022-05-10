@@ -12,8 +12,8 @@
 from pygame import Surface
 from pygame.sprite import Group
 
-from being import Being
-from meta import WINDOW_SIZE
+from jadacore.being import Being
+from jadacore.meta import WINDOW_SIZE
 
 
 ### CONSTANTS & FLAGS ###

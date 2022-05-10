@@ -12,8 +12,10 @@
 import pdb
 import sys
 
-from game import Game
-from util import Stylist
+from jadacore.game import Game
+from jadacore.util import Stylist
+
+from test_world import TestWorld
 
 
 ### CONSTANTS & FLAGS ###
@@ -30,6 +32,7 @@ def main(argv: list[str], argc: int) -> int:
     processArgv(argv, argc)
 
     game: Game = Game()
+    game.set_world(TestWorld())
     game.run()
 
     return EXIT_SUCCESS

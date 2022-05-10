@@ -12,8 +12,7 @@
 import pygame
 from pygame.time import Clock
 
-from . import Window
-from test_world import TestWorld
+from . import Window, World
 
 
 ### CONSTANTS & FLAGS ###
@@ -36,12 +35,17 @@ class Game:
         pygame.init()
         self.running = False
         self.window = Window()
-        self.window.set_world(TestWorld())
 
 
     ### OPERATIONAL METHODS ###
 
-    def run(self):
+    def run(self) -> None:
+        """
+        run() -> None
+
+        Starts up the Game instance, and returns upon pygame.QUIT event.
+        """
+
         self.running = True
         self.clock = Clock()
 
@@ -57,3 +61,9 @@ class Game:
                 self.window.render()
 
         pygame.quit()
+
+    
+    ### AUXILIARY METHODS ###
+
+    def set_world(self, world: World) -> None:
+        self.window.set_world(world)

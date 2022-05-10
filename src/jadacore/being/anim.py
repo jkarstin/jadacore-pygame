@@ -13,7 +13,7 @@ from pathlib import Path
 import pygame
 from pygame import Surface, Vector2
 
-from meta import PIXEL_SIZE, RESOURCES_PATH
+from jadacore.meta import PIXEL_SIZE, RESOURCES_PATH
 
 
 ### CLASS DEFINITIONS ###

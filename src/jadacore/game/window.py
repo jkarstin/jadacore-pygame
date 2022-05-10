@@ -13,7 +13,7 @@ import pygame
 from pygame import Surface, Vector2
 
 from . import World
-from meta import WINDOW_SIZE
+from jadacore.meta import WINDOW_SIZE
 
 
 ### CONSTANTS & FLAGS ###

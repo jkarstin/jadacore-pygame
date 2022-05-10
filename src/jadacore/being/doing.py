@@ -1,16 +1,16 @@
 #################################
-# ghost.py       [v0.0.1-alpha] #
+# doing.py       [v0.0.1-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.06.2022 #
+# J Karstin Neill    05.09.2022 #
 #################################
 
 
 ### IMPORTS ###
 
 from pathlib import Path
-from pygame import Surface, Vector2
+from pygame import Vector2
 
 from . import Animation, Being
 
@@ -20,7 +20,7 @@ from . import Animation, Being
 
 ### CLASS DEFINITIONS ###
 
-class Ghost(Being):
+class Doing(Being):
 
     ### FIELDS ###
 
@@ -31,7 +31,7 @@ class Ghost(Being):
 
     def __init__(
         self,
-        ghost_path: Path,
+        sprite_sheet_path: Path,
         sprite_sheet_size: Vector2=Vector2(1),
         frames_per_second: float=2,
         animation_style: int=Animation.ANIM_STYLE_LOOP,
@@ -41,13 +41,13 @@ class Ghost(Being):
         Being.__init__(self, *args, **kwargs)
 
         self.animation = Animation(
-            ghost_path,
+            sprite_sheet_path,
             sprite_sheet_size,
             frames_per_second,
             animation_style
         )
 
-        self.image = self.animation.get_frame()
+        self.image  = self.animation.get_frame()
         self.rect.w = self.animation.frame_size.x
         self.rect.h = self.animation.frame_size.y
 

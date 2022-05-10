@@ -12,7 +12,7 @@
 from pathlib import Path
 from pygame import Color, Vector2
 
-from . import Being
+from jadacore.being import Being
 
 
 ### CLASS DEFINITIONS ###

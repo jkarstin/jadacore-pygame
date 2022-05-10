@@ -1,8 +1,10 @@
 
 from pygame import Vector2
 
-from being import Block, Ghost
-from game import World
+from jadacore.game import World
+
+from block import Block
+from ghost import Ghost
 
 
 class TestWorld(World):
@@ -13,7 +15,7 @@ class TestWorld(World):
 
     def setup(self):
         self.block = Block()
-        self.ghost = Ghost('ghost.ss.gif', Vector2(2, 2), pos=Vector2(650, 125))
+        self.ghost = Ghost('ghost.ss.gif', sprite_sheet_size=Vector2(2, 2), pos=Vector2(650, 125))
         self.add(self.block, self.ghost)
 
     
