@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.06.2022 #
+# J Karstin Neill    05.09.2022 #
 #################################
 
 
@@ -19,9 +19,6 @@ from . import Being
 
 class Block(Being):
 
-    ### FIELDS ###
-
-
     ### CONSTRUCTOR ###
 
     def __init__(
@@ -30,9 +27,10 @@ class Block(Being):
         size: Vector2=None,
         color: Color=None,
         image_path: Path=None,
+        *args,
         **kwargs
     ) -> None:
-        Being.__init__(self, pos, size, color, image_path, **kwargs)
+        Being.__init__(self, pos, size, color, image_path, *args, **kwargs)
     
 
     ### OPERATIONAL METHODS ###

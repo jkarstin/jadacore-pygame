@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.06.2022 #
+# J Karstin Neill    05.09.2022 #
 #################################
 
 
@@ -13,7 +13,6 @@ from pathlib import Path
 import pygame
 from pygame import Color, Surface, Rect, Vector2
 from pygame.sprite import Group, Sprite
-from typing import Union
 
 from meta import PIXEL_SIZE, RESOURCES_PATH
 
@@ -24,11 +23,11 @@ class Being(Sprite):
 
     ### FIELD ###
 
-    pos: Vector2   = None
     size: Vector2  = None
     image: Surface = None
     rect: Rect     = None
 
+    pos: Vector2       = None
     move_vect: Vector2 = None
 
 
@@ -36,22 +35,22 @@ class Being(Sprite):
 
     def __init__(
         self,
-        pos: Vector2=None,
-        size: Vector2=None,
+        pos: Vector2=Vector2(0.0, 0.0),
+        size: Vector2=Vector2(1, 1),
         color: Color=None,
         image_path: Path=None,
-        groups: Union[Group, list[Group]]=None
+        *groups: Group
     ) -> None:
         Sprite.__init__(self)
 
         self.pos = pos if pos else Vector2()
-        self.size = size if size else Vector2(PIXEL_SIZE)
+        self.size = PIXEL_SIZE * (size if size else Vector2(1))
 
         if image_path:
             image_raw: Surface = pygame.image.load(RESOURCES_PATH/image_path)
             self.image = pygame.transform.scale(
                 image_raw.convert_alpha(),
-                (image_raw.get_width() * self.size.x, image_raw.get_height() * self.size.y)
+                [image_raw.get_width() * self.size.x, image_raw.get_height() * self.size.y]
             )
         else:
             self.image = Surface(self.size)
@@ -59,11 +58,8 @@ class Being(Sprite):
         
         self.rect = self.image.get_rect()
 
-        if type(groups) == Group:
-            groups.add(self)
-        elif type(groups) == list:
-            for group in groups:
-                group.add(self)
+        for group in groups:
+            group.add(self)
 
 
     ### OPERATIONAL METHODS ###
