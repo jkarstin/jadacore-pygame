@@ -32,7 +32,7 @@ class Doing(Being):
     def __init__(
         self,
         sprite_sheet_path: Path,
-        sprite_sheet_size: Vector2=Vector2(1),
+        sprite_sheet_dims: Vector2=Vector2(1),
         frames_per_second: float=2,
         animation_style: int=Animation.ANIM_STYLE_LOOP,
         **kwargs
@@ -41,7 +41,7 @@ class Doing(Being):
 
         self.animation = Animation(
             sprite_sheet_path,
-            sprite_sheet_size,
+            sprite_sheet_dims,
             frames_per_second,
             animation_style
         )
