@@ -53,13 +53,11 @@ class Doing(Being):
         self.animator.start()
 
 
-    ### OPERATIONAL METHODS ###
+    ### WRAPPING METHODS ###
 
     def move(self, move_vect: Vector2) -> None:
         self.motor.move(move_vect)
-
-
-    ### WRAPPING METHODS ###
+        
 
     def add_animation(self,
         anim_name: str,
