@@ -3,7 +3,7 @@
 #==================================#
 #                                  #
 #----------------------------------#
-# J Karstin Neill       05.11.2022 #
+# J Karstin Neill       05.12.2022 #
 ####################################
 
 
@@ -14,15 +14,9 @@ from pygame import Vector2
 from jadacore.being import Seeking
 
 
-### CONSTANTS & FLAGS ###
-
-
 ### CLASS DEFINITIONS ###
 
 class SeekPlayer(Seeking):
-
-    ### FIELDS ###
-
 
     ### CONSTRUCTOR ###
 
@@ -33,9 +27,4 @@ class SeekPlayer(Seeking):
             default_anim_name='float',
             **kwargs
         )
-
-
-    ### OPERATIONAL METHODS ###
-
-    def update(self, dt: float) -> None:
-        super().update(dt)
+        
