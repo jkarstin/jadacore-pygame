@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.10.2022 #
+# J Karstin Neill    05.11.2022 #
 #################################
 
 
@@ -23,7 +23,7 @@ DEFAULT_KEYS: dict[str, list[int]] = {
     'left_key':  [pygame.K_LEFT,  pygame.K_a],
     'right_key': [pygame.K_RIGHT, pygame.K_d]
 }
-DEFAULT_MOVE_SPEED: float = 2.0
+DEFAULT_MOVE_SPEED: float = 10.0
 
 
 ### CLASS DEFINITIONS ###

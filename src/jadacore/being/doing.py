@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.10.2022 #
+# J Karstin Neill    05.11.2022 #
 #################################
 
 
@@ -63,10 +63,9 @@ class Doing(Being):
     ### OPERATIONAL METHODS ###
 
     def update(self, dt: float) -> None:
-        super().update(dt)
         self.current_animation = self.animations[self.current_anim_name]
         self.attach_component(self.current_animation)
-        self.current_animation.update(dt)
+        super().update(dt)
 
 
     ### AUXILIARY METHODS ###

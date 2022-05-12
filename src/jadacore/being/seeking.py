@@ -18,7 +18,7 @@ from . import Doing
 
 ### CONSTANTS & FLAGS ###
 
-DEFAULT_MOVE_SPEED: float = 2.0
+DEFAULT_MOVE_SPEED: float = 10.0
 
 
 ### CLASS DEFINITIONS ###
