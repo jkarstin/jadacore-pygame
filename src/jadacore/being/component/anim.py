@@ -13,8 +13,8 @@ from pathlib import Path
 import pygame
 from pygame import Surface, Vector2
 
+from jadacore.being import Component
 from jadacore.meta import PIXEL_SIZE, RESOURCES_PATH
-from . import Component
 
 
 ### CLASS DEFINITIONS ###
@@ -52,11 +52,14 @@ class Animation(Component):
     ### CONSTRUCTOR ###
 
     def __init__(self,
+        name: str,
         sprite_sheet_path: Path,
         sprite_sheet_dims: Vector2=Vector2(1),
         frames_per_second: float=2,
         animation_style: int=ANIM_STYLE_LOOP
     ) -> None:
+        Component.__init__(self, name)
+
         # read in constructor arguments
         sprite_sheet_raw: Surface = pygame.image.load(RESOURCES_PATH/sprite_sheet_path)
         self.sprite_sheet = pygame.transform.scale(
@@ -112,9 +115,6 @@ class Animation(Component):
             self.being.image = self.get_frame()
 
 
-    def cleanup(self) -> None: pass
-
-
     def update(self, dt: float) -> None:
         if self.being:
             if self.animation_state == Animation.ANIM_STATE_RUNNING and self.frame_seconds:
@@ -136,6 +136,9 @@ class Animation(Component):
             
             self.current_frame = self.frames[self.current_frame_index]            
             self.being.image = self.current_frame
+
+
+    def cleanup(self) -> None: pass
 
 
     ### OPERATIONAL METHODS ###

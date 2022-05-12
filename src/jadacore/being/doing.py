@@ -12,10 +12,12 @@
 from pathlib import Path
 from pygame import Vector2
 
-from . import Animation, Being
+from . import Being, Animation, Motor
 
 
 ### CONSTANTS & FLAGS ###
+
+DEFAULT_ANIM_NAME: str = 'anim_default'
 
 
 ### CLASS DEFINITIONS ###
@@ -23,6 +25,8 @@ from . import Animation, Being
 class Doing(Being):
 
     ### FIELDS ###
+
+    motor: Motor = None
 
     animations: dict[str, Animation] = None
     current_animation: Animation     = None
@@ -41,8 +45,12 @@ class Doing(Being):
     ) -> None:
         Being.__init__(self, **kwargs)
 
+        self.motor = Motor('motor')
+        self.attach_component(self.motor)
+
         self.animations = {}
         self.animations['default'] = Animation(
+            (default_anim_name if default_anim_name else DEFAULT_ANIM_NAME),
             sprite_sheet_path,
             sprite_sheet_dims,
             frames_per_second,
@@ -66,6 +74,10 @@ class Doing(Being):
         self.current_animation = self.animations[self.current_anim_name]
         self.attach_component(self.current_animation)
         super().update(dt)
+
+
+    def move(self, move_vect: Vector2) -> None:
+        self.motor.move(move_vect)
 
 
     ### AUXILIARY METHODS ###

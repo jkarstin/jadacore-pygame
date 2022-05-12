@@ -15,62 +15,11 @@ from pygame import Color, Surface, Rect, Vector2
 from pygame.sprite import Group, Sprite
 from typing import Optional
 
-from jadacore.meta import RESOURCES_PATH, PIXEL_SIZE
+from jadacore.meta import RESOURCES_PATH, PIXEL_SIZE, ERROR_UNNAMED_COMPONENT
+from jadacore.util import error
 
 
 ### CLASS DEFINITIONS ###
-
-class Component:
-
-    being: Optional['Being'] = None
-
-    
-    def setup(self) -> None: pass
-    def update(self, dt: float) -> None: pass
-    def cleanup(self) -> None: pass
-
-
-    def attach_to(self, being: Optional['Being']=None) -> None:
-        if being:
-            if self.being:
-                self.being.detach_component(self)
-            self.being = being
-            self.setup()
-
-    
-    def detach_from(self, being: Optional['Being']=None) -> None:
-        if being:
-            if self.being and self.being == being:
-                self.cleanup()
-                self.being = None
-
-
-
-class Motor(Component):
-
-    ### FIELDS ###
-
-    move_vect: Vector2 = None
-
-
-    ### OPERATIONAL METHODS ###
-
-    def setup(self): pass
-    def cleanup(self): pass
-
-
-    def update(self, dt: float):
-        if self.being:
-            if self.move_vect:
-                self.being.pos.x += self.move_vect.x * PIXEL_SIZE * dt
-                self.being.pos.y += self.move_vect.y * PIXEL_SIZE * dt
-                self.move_vect = None
-
-
-    def move(self, move_vect: Vector2):
-        self.move_vect = move_vect
-
-
 
 class Being(Sprite):
 
@@ -80,10 +29,7 @@ class Being(Sprite):
     image: Surface = None
     rect: Rect     = None
 
-    pos: Vector2   = None
-
-    components: list[Component] = None
-    motor: Motor   = None
+    components: dict[str, Optional['Component']] = None
 
 
     ### CONSTRUCTOR ###
@@ -115,36 +61,63 @@ class Being(Sprite):
         if groups:
             for group in groups: group.add(self)
 
-        self.components = []
-
-        self.motor = Motor()
-        self.attach_component(self.motor)
+        self.components = {}
 
 
     ### OPERATIONAL METHODS ###
 
     def update(self, dt: float) -> None:
-        for comp in self.components: comp.update(dt)
-        
-        self.rect.x = int(self.pos.x / PIXEL_SIZE) * PIXEL_SIZE
-        self.rect.y = int(self.pos.y / PIXEL_SIZE) * PIXEL_SIZE
-
-
-    def move(self, move_vect: Vector2=None) -> None:
-        if self.motor:
-            self.motor.move(move_vect)
+        for comp_name in self.components:
+            self.components[comp_name].update(dt)
 
     
     ### AUXILIARY METHODS ###
     
-    def attach_component(self, component: Component=None) -> None:
-        if component and component not in self.components:
-            self.components.append(component)
+    def attach_component(self, component: Optional['Component']=None) -> None:
+        if component and component.name not in self.components:
+            self.components[component.name] = component
             component.attach_to(self)
 
+
+    def fetch_component(self, comp_name: str) -> Optional['Component']:
+        if comp_name and comp_name in self.components:
+            return self.components[comp_name]
+        return None
+
     
-    def detach_component(self, component: Component=None) -> None:
-        if component and component in self.components:
-            self.components.remove(component)
+    def detach_component(self, component: Optional['Component']=None) -> None:
+        if component and component.name in self.components:
+            self.components.pop(component.name)
             component.detach_from(self)
     
+
+
+class Component:
+
+    name: str    = None
+    being: Being = None
+
+
+    def __init__(self, name: str):
+        if not name: error("Cannot initialize Component without a name!", ERROR_UNNAMED_COMPONENT)
+        self.name = name
+
+    
+    def setup(self) -> None: pass
+    def update(self, dt: float) -> None: pass
+    def cleanup(self) -> None: pass
+
+
+    def attach_to(self, being: Being=None) -> None:
+        if being:
+            if self.being:
+                self.being.detach_component(self)
+            self.being = being
+            self.setup()
+
+    
+    def detach_from(self, being: Being=None) -> None:
+        if being:
+            if self.being and self.being == being:
+                self.cleanup()
+                self.being = None
