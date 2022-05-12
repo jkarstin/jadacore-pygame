@@ -17,6 +17,14 @@ from . import Doing
 
 ### CONSTANTS & FLAGS ###
 
+DEFAULT_KEYS: dict[str, list[int]] = {
+    'up_key':    [pygame.K_UP,    pygame.K_w],
+    'down_key':  [pygame.K_DOWN,  pygame.K_s],
+    'left_key':  [pygame.K_LEFT,  pygame.K_a],
+    'right_key': [pygame.K_RIGHT, pygame.K_d]
+}
+DEFAULT_MOVE_SPEED: float = 2.0
+
 
 ### CLASS DEFINITIONS ###
 
@@ -34,24 +42,36 @@ class Going(Doing):
 
     ### CONSTRUCTOR ###
 
-    def __init__(
-        self,
+    def __init__(self,
         up_keys: list[int]=None,
         down_keys: list[int]=None,
         left_keys: list[int]=None,
         right_keys: list[int]=None,
-        move_speed: float=10.0,
+        move_speed: float=None,
         **kwargs
     ) -> None:
+        """
+        Going() -> Going
+        Going(up_keys: list[int], down_keys: list[int], left_keys: list[int], right_keys: list[int], move_speed: float, **kwargs) -> Going
+
+        Arguments:
+        ----------
+            up_keys
+            down_keys
+            left_keys
+            right_keys
+            move_speed
+            **kwargs
+        """
         Doing.__init__(self, **kwargs)
 
-        self.up_keys    = up_keys    if up_keys    else [pygame.K_w, pygame.K_UP]
-        self.down_keys  = down_keys  if down_keys  else [pygame.K_s, pygame.K_DOWN]
-        self.left_keys  = left_keys  if left_keys  else [pygame.K_a, pygame.K_LEFT]
-        self.right_keys = right_keys if right_keys else [pygame.K_d, pygame.K_RIGHT]
+        self.up_keys    = up_keys    if up_keys    else DEFAULT_KEYS['up_key']
+        self.down_keys  = down_keys  if down_keys  else DEFAULT_KEYS['down_key']
+        self.left_keys  = left_keys  if left_keys  else DEFAULT_KEYS['left_key']
+        self.right_keys = right_keys if right_keys else DEFAULT_KEYS['right_key']
         self.keys_held  = []
 
-        self.move_speed = move_speed if move_speed else 10.0
+        self.move_speed = move_speed if move_speed else DEFAULT_MOVE_SPEED
 
 
     ### METHODS ###

@@ -50,8 +50,7 @@ class Animation:
 
     ### CONSTRUCTOR ###
 
-    def __init__(
-        self,
+    def __init__(self,
         sprite_sheet_path: Path,
         sprite_sheet_dims: Vector2=Vector2(1),
         frames_per_second: float=2,

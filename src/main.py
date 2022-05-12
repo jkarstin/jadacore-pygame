@@ -14,7 +14,7 @@ import sys
 from jadacore.game import Game
 from jadacore.meta import EXIT_SUCCESS
 
-from test_world import TestWorld
+from start_world import StartWorld
 
 
 ### MAIN FUNCTION DEFINITION ###
@@ -23,7 +23,7 @@ def main(argv: list[str], argc: int) -> int:
     processArgv(argv, argc)
 
     game: Game = Game()
-    game.set_world(TestWorld())
+    game.set_world(StartWorld())
     game.run()
 
     return EXIT_SUCCESS
@@ -32,6 +32,8 @@ def main(argv: list[str], argc: int) -> int:
 ### UTILITY FUNCTIONS ###
 
 def processArgv(argv: list[str], argc: int) -> str:
+    if argc > 1:
+        print(argv)
     return None
 
 

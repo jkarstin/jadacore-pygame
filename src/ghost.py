@@ -21,4 +21,10 @@ class Ghost(Doing):
     ### CONSTRUCTOR ###
 
     def __init__(self, **kwargs) -> None:
-        Doing.__init__(self, 'ghost.ss.gif', sprite_sheet_dims=Vector2(2, 2), **kwargs)
+        Doing.__init__(self,
+            'ghosti.ss.png',
+            sprite_sheet_dims=Vector2(2, 2),
+            frames_per_second=1.7,
+            default_anim_name='float',
+            **kwargs
+        )
