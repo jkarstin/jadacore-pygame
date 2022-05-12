@@ -53,7 +53,7 @@ class Doing(Being):
             self.animations[self.current_anim_name] = self.animations['default']
         self.current_animation = self.animations[self.current_anim_name]
 
-        self.image  = self.current_animation.get_frame()
+        self.attach_component(self.current_animation)
         self.rect.w = self.current_animation.frame_size.x
         self.rect.h = self.current_animation.frame_size.y
 
@@ -65,7 +65,8 @@ class Doing(Being):
     def update(self, dt: float) -> None:
         super().update(dt)
         self.current_animation = self.animations[self.current_anim_name]
-        self.image = self.current_animation.update(dt)
+        self.attach_component(self.current_animation)
+        self.current_animation.update(dt)
 
 
     ### AUXILIARY METHODS ###

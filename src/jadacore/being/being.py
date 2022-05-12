@@ -33,7 +33,7 @@ class Component:
     def attach_to(self, being: Optional['Being']=None) -> None:
         if being:
             if self.being:
-                self.detach_from(self.being)
+                self.being.detach_component(self)
             self.being = being
             self.setup()
 

@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.09.2022 #
+# J Karstin Neill    05.11.2022 #
 #################################
 
 
@@ -14,11 +14,12 @@ import pygame
 from pygame import Surface, Vector2
 
 from jadacore.meta import PIXEL_SIZE, RESOURCES_PATH
+from . import Component
 
 
 ### CLASS DEFINITIONS ###
 
-class Animation:
+class Animation(Component):
 
     ### CONSTANTS & FLAGS ###
 
@@ -104,30 +105,40 @@ class Animation:
         self.current_frame = self.frames[self.current_frame_index]
 
 
+    ### COMPONENT METHODS ###
+
+    def setup(self) -> None: 
+        if self.being:
+            self.being.image = self.get_frame()
+
+
+    def cleanup(self) -> None: pass
+
+
+    def update(self, dt: float) -> None:
+        if self.being:
+            if self.animation_state == Animation.ANIM_STATE_RUNNING and self.frame_seconds:
+                self.animation_time += dt
+                self.current_frame_time += dt
+
+                if self.current_frame_time >= self.frame_seconds:
+                    self.current_frame_time %= self.frame_seconds
+                    self.current_frame_index += 1
+
+                    if self.animation_style == Animation.ANIM_STYLE_LOOP:
+                        if self.current_frame_index >= len(self.frames):
+                            self.current_frame_index %= len(self.frames)
+
+                    elif self.animation_style == Animation.ANIM_STYLE_ONCE:
+                        if self.current_frame_index >= len(self.frames):
+                            self.current_frame_index = len(self.frames) - 1
+                            self.animation_state = Animation.ANIM_STATE_PAUSED
+            
+            self.current_frame = self.frames[self.current_frame_index]            
+            self.being.image = self.current_frame
+
+
     ### OPERATIONAL METHODS ###
-
-    def update(self, dt: float) -> Surface:
-        if self.animation_state == Animation.ANIM_STATE_RUNNING and self.frame_seconds:
-            self.animation_time += dt
-            self.current_frame_time += dt
-
-            if self.current_frame_time >= self.frame_seconds:
-                self.current_frame_time %= self.frame_seconds
-                self.current_frame_index += 1
-
-                if self.animation_style == Animation.ANIM_STYLE_LOOP:
-                    if self.current_frame_index >= len(self.frames):
-                        self.current_frame_index %= len(self.frames)
-
-                elif self.animation_style == Animation.ANIM_STYLE_ONCE:
-                    if self.current_frame_index >= len(self.frames):
-                        self.current_frame_index = len(self.frames) - 1
-                        self.animation_state = Animation.ANIM_STATE_PAUSED
-        
-        self.current_frame = self.frames[self.current_frame_index]
-        
-        return self.current_frame
-
 
     def start(self) -> tuple[int, float, float, int, int]:
         frame_index: int     = self.current_frame_index
