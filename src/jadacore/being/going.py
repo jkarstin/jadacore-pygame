@@ -94,19 +94,20 @@ class Going(Doing):
         tickle_keys(self.right_keys)
 
 
-        def record_movement(keylist: list[int], delta: Vector2) -> None:
+        def record_movement(keylist: list[int], delta: Vector2, move_vect: Vector2=None) -> Vector2:
             for key in keylist:
                 if key in self.keys_held:
-                    if self.move_vect:
-                        self.move_vect += delta
+                    if move_vect:
+                        move_vect += delta
                     else:
-                        self.move_vect = delta
-                    break
+                        move_vect = delta
+            return move_vect
 
-        record_movement(self.up_keys,    Vector2(               0, -self.move_speed))
-        record_movement(self.down_keys,  Vector2(               0,  self.move_speed))
-        record_movement(self.left_keys,  Vector2(-self.move_speed,                0))
-        record_movement(self.right_keys, Vector2( self.move_speed,                0))
-
+        move_vect: Vector2 = None
+        move_vect = record_movement(self.up_keys,    Vector2(               0, -self.move_speed), move_vect)
+        move_vect = record_movement(self.down_keys,  Vector2(               0,  self.move_speed), move_vect)
+        move_vect = record_movement(self.left_keys,  Vector2(-self.move_speed,                0), move_vect)
+        move_vect = record_movement(self.right_keys, Vector2( self.move_speed,                0), move_vect)
+        self.move(move_vect)
 
         super().update(dt)

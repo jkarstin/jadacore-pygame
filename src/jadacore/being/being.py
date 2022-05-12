@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.10.2022 #
+# J Karstin Neill    05.11.2022 #
 #################################
 
 
@@ -25,27 +25,65 @@ class Component:
     being: Optional['Being'] = None
 
     
-    def setup(self, **kwargs): pass
-    def update(self, dt: float, **kwargs): pass
-    
+    def setup(self) -> None: pass
+    def update(self, dt: float) -> None: pass
+    def cleanup(self) -> None: pass
 
-    def attach_to(self, being: Optional['Being']=None, **kwargs):
-        self.being = being
-        self.setup(**kwargs)
+
+    def attach_to(self, being: Optional['Being']=None) -> None:
+        if being:
+            if self.being:
+                self.detach_from(self.being)
+            self.being = being
+            self.setup()
+
+    
+    def detach_from(self, being: Optional['Being']=None) -> None:
+        if being:
+            if self.being and self.being == being:
+                self.cleanup()
+                self.being = None
+
+
+
+class Motor(Component):
+
+    ### FIELDS ###
+
+    move_vect: Vector2 = None
+
+
+    ### OPERATIONAL METHODS ###
+
+    def setup(self): pass
+    def cleanup(self): pass
+
+
+    def update(self, dt: float):
+        if self.being:
+            if self.move_vect:
+                self.being.pos.x += self.move_vect.x * PIXEL_SIZE * dt
+                self.being.pos.y += self.move_vect.y * PIXEL_SIZE * dt
+                self.move_vect = None
+
+
+    def move(self, move_vect: Vector2):
+        self.move_vect = move_vect
+
 
 
 class Being(Sprite):
 
-    ### FIELD ###
+    ### FIELDS ###
 
     size: Vector2  = None
     image: Surface = None
     rect: Rect     = None
 
-    pos: Vector2       = None
-    move_vect: Vector2 = None
+    pos: Vector2   = None
 
     components: list[Component] = None
+    motor: Motor   = None
 
 
     ### CONSTRUCTOR ###
@@ -79,31 +117,34 @@ class Being(Sprite):
 
         self.components = []
 
+        self.motor = Motor()
+        self.attach_component(self.motor)
+
 
     ### OPERATIONAL METHODS ###
 
     def update(self, dt: float) -> None:
-        if self.move_vect:
-            self.pos.x += self.move_vect.x * PIXEL_SIZE * dt
-            self.pos.y += self.move_vect.y * PIXEL_SIZE * dt
-            self.move_vect = None
+        for comp in self.components: comp.update(dt)
         
         self.rect.x = int(self.pos.x / PIXEL_SIZE) * PIXEL_SIZE
         self.rect.y = int(self.pos.y / PIXEL_SIZE) * PIXEL_SIZE
 
-    
-    ### AUXILIARY METHODS ###
 
     def move(self, move_vect: Vector2=None) -> None:
-        self.move_vect = move_vect
+        if self.motor:
+            self.motor.move(move_vect)
 
     
-    def add_component(self, component: Component=None) -> None:
+    ### AUXILIARY METHODS ###
+    
+    def attach_component(self, component: Component=None) -> None:
         if component and component not in self.components:
             self.components.append(component)
+            component.attach_to(self)
 
     
-    def remove_component(self, component: Component=None) -> None:
+    def detach_component(self, component: Component=None) -> None:
         if component and component in self.components:
             self.components.remove(component)
+            component.detach_from(self)
     
