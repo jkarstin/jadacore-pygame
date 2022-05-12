@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.11.2022 #
+# J Karstin Neill    05.12.2022 #
 #################################
 
 
@@ -15,6 +15,11 @@ from pygame import Surface, Vector2
 
 from jadacore.being import Component
 from jadacore.meta import PIXEL_SIZE, RESOURCES_PATH
+
+
+### CONSTANTS & FLAGS ###
+
+DEFAULT_ANIM_NAME: str = 'anim_default'
 
 
 ### CLASS DEFINITIONS ###
@@ -110,9 +115,11 @@ class Animation(Component):
 
     ### COMPONENT METHODS ###
 
-    def setup(self) -> None: 
+    def on_attach(self) -> None: 
         if self.being:
             self.being.image = self.get_frame()
+            self.being.rect.w = self.frame_size.x
+            self.being.rect.h = self.frame_size.y
 
 
     def update(self, dt: float) -> None:
@@ -122,8 +129,8 @@ class Animation(Component):
                 self.current_frame_time += dt
 
                 if self.current_frame_time >= self.frame_seconds:
+                    self.current_frame_index += int(self.current_frame_time / self.frame_seconds)
                     self.current_frame_time %= self.frame_seconds
-                    self.current_frame_index += 1
 
                     if self.animation_style == Animation.ANIM_STYLE_LOOP:
                         if self.current_frame_index >= len(self.frames):
@@ -138,7 +145,7 @@ class Animation(Component):
             self.being.image = self.current_frame
 
 
-    def cleanup(self) -> None: pass
+    def on_detach(self) -> None: pass
 
 
     ### OPERATIONAL METHODS ###
@@ -201,3 +208,98 @@ class Animation(Component):
             return None
 
         return self.current_frame
+
+
+
+class Animator(Component):
+
+    ### FIELDS ###
+
+    animations: dict[str, Animation] = None
+    current_animation: Animation     = None
+    current_anim_name: str           = None
+
+
+    ### CONSTRUCTOR ###
+
+    def __init__(self,
+        name: str,
+        sprite_sheet_path: Path,
+        sprite_sheet_dims: Vector2=Vector2(1),
+        frames_per_second: float=2,
+        animation_style: int=Animation.ANIM_STYLE_LOOP,
+        default_anim_name: str=None
+    ):
+        Component.__init__(self, name)
+
+        self.animations = {}
+        self.animations['default'] = Animation(
+            (default_anim_name if default_anim_name else DEFAULT_ANIM_NAME),
+            sprite_sheet_path,
+            sprite_sheet_dims,
+            frames_per_second,
+            animation_style
+        )
+        self.current_anim_name = default_anim_name if default_anim_name else 'default'
+        if self.current_anim_name not in self.animations:
+            self.animations[self.current_anim_name] = self.animations['default']
+        self.current_animation = self.animations[self.current_anim_name]
+
+
+    ### COMPONENT METHODS ###
+
+    def on_attach(self) -> None:
+        if self.being:
+            self.being.attach_component(self.current_animation)
+
+
+    def update(self, dt: float) -> None:
+        self.current_animation = self.animations[self.current_anim_name]
+        if self.being:
+            self.being.attach_component(self.current_animation)
+
+
+    def on_detach(self) -> None: 
+        if self.being:
+            self.being.detach_component(self.current_animation)
+
+
+    ### OPERATIONAL METHODS ###
+
+    def start(self) -> None:
+        self.current_animation.start()
+
+
+    def pause(self) -> None:
+        self.current_animation.pause()
+
+
+    def stop(self) -> None:
+        self.current_animation.stop()
+
+
+    def add_animation(self,
+        anim_name: str,
+        sprite_sheet_path: Path,
+        sprite_sheet_dims: Vector2=Vector2(1),
+        frames_per_second: float=2,
+        animation_style: int=Animation.ANIM_STYLE_LOOP
+    ) -> Animation:
+        self.animations[anim_name] = Animation(
+            anim_name,
+            sprite_sheet_path,
+            sprite_sheet_dims,
+            frames_per_second,
+            animation_style
+        )
+
+        return self.animations[anim_name]
+
+
+    def set_animation(self, anim_name: str) -> Animation:
+        if not anim_name or anim_name not in self.animations:
+            return None
+
+        self.current_anim_name = anim_name
+        self.update(0)
+        return self.current_animation

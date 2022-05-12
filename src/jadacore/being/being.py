@@ -103,9 +103,9 @@ class Component:
         self.name = name
 
     
-    def setup(self) -> None: pass
+    def on_attach(self) -> None: pass
     def update(self, dt: float) -> None: pass
-    def cleanup(self) -> None: pass
+    def on_detach(self) -> None: pass
 
 
     def attach_to(self, being: Being=None) -> None:
@@ -113,11 +113,11 @@ class Component:
             if self.being:
                 self.being.detach_component(self)
             self.being = being
-            self.setup()
+            self.on_attach()
 
     
     def detach_from(self, being: Being=None) -> None:
         if being:
             if self.being and self.being == being:
-                self.cleanup()
+                self.on_detach()
                 self.being = None

@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.11.2022 #
+# J Karstin Neill    05.12.2022 #
 #################################
 
 
@@ -12,12 +12,7 @@
 from pathlib import Path
 from pygame import Vector2
 
-from . import Being, Animation, Motor
-
-
-### CONSTANTS & FLAGS ###
-
-DEFAULT_ANIM_NAME: str = 'anim_default'
+from . import Being, Animator, Animation, Motor
 
 
 ### CLASS DEFINITIONS ###
@@ -27,10 +22,7 @@ class Doing(Being):
     ### FIELDS ###
 
     motor: Motor = None
-
-    animations: dict[str, Animation] = None
-    current_animation: Animation     = None
-    current_anim_name: str           = None
+    animator: Animator = None
 
 
     ### CONSTRUCTOR ###
@@ -48,64 +40,39 @@ class Doing(Being):
         self.motor = Motor('motor')
         self.attach_component(self.motor)
 
-        self.animations = {}
-        self.animations['default'] = Animation(
-            (default_anim_name if default_anim_name else DEFAULT_ANIM_NAME),
+        self.animator = Animator(
+            'animator',
             sprite_sheet_path,
             sprite_sheet_dims,
             frames_per_second,
-            animation_style
+            animation_style,
+            default_anim_name
         )
-        self.current_anim_name = default_anim_name if default_anim_name else 'default'
-        if self.current_anim_name not in self.animations:
-            self.animations[self.current_anim_name] = self.animations['default']
-        self.current_animation = self.animations[self.current_anim_name]
+        self.attach_component(self.animator)
 
-        self.attach_component(self.current_animation)
-        self.rect.w = self.current_animation.frame_size.x
-        self.rect.h = self.current_animation.frame_size.y
-
-        self.current_animation.start()
+        self.animator.start()
 
 
     ### OPERATIONAL METHODS ###
-
-    def update(self, dt: float) -> None:
-        self.current_animation = self.animations[self.current_anim_name]
-        self.attach_component(self.current_animation)
-        super().update(dt)
-
 
     def move(self, move_vect: Vector2) -> None:
         self.motor.move(move_vect)
 
 
-    ### AUXILIARY METHODS ###
+    ### WRAPPING METHODS ###
 
     def add_animation(self,
-        animation_name: str,
+        anim_name: str,
         sprite_sheet_path: Path,
-        sprite_sheet_dims: Vector2,
-        frames_per_second: float,
-        animation_style: int
+        **kwargs
     ) -> Animation:
-        if not animation_name:
-            return None
-
-        self.animations[animation_name] = Animation(
+        return self.animator.add_animation(
+            anim_name,
             sprite_sheet_path,
-            sprite_sheet_dims,
-            frames_per_second,
-            animation_style
+            **kwargs
         )
-
-        return self.animations[animation_name]
         
     
-    def set_animation(self, animation_name: str) -> Animation:
-        if not animation_name or animation_name not in self.animations:
-            return None
+    def set_animation(self, anim_name: str) -> Animation:
+        return self.animator.set_animation(anim_name)
 
-        self.current_anim_name = animation_name
-        self.update(0)
-        return self.current_animation

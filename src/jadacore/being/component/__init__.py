@@ -1,2 +1,2 @@
 from .motor import Motor
-from .anim import Animation
+from .anim import Animator, Animation
