@@ -11,10 +11,22 @@
 
 import sys
 
+from pygame.event import Event
+
 from jadacore.game import Game
 from jadacore.meta import EXIT_SUCCESS
 
 from start_world import StartWorld
+
+
+### CLASS DEFINITIONS ###
+
+class TransPlanarGame(Game):
+
+    ### GAME METHODS ###
+
+    def setup(self) -> None: 
+        self.set_world(StartWorld())
 
 
 ### MAIN FUNCTION DEFINITION ###
@@ -22,8 +34,7 @@ from start_world import StartWorld
 def main(argv: list[str], argc: int) -> int:
     processArgv(argv, argc)
 
-    game: Game = Game()
-    game.set_world(StartWorld())
+    game: Game = TransPlanarGame()
     game.run()
 
     return EXIT_SUCCESS

@@ -10,6 +10,7 @@
 ### IMPORTS ###
 
 import pygame
+from pygame.event import Event
 from pygame.time import Clock
 
 from . import Window, World
@@ -35,9 +36,15 @@ class Game:
         pygame.init()
         self.running = False
         self.window = Window()
+        self.setup()
 
 
     ### OPERATIONAL METHODS ###
+
+    def setup(self) -> None: pass
+    def handle_events(self, events: list[Event]) -> None: pass
+    def update(self, dt: float) -> None: pass
+    
 
     def run(self) -> None:
         """
@@ -50,12 +57,17 @@ class Game:
         self.clock = Clock()
 
         while self.running:
-            for event in pygame.event.get():
+            events: list[Event] = pygame.event.get()
+            for event in events:
                 if event.type == pygame.QUIT:
                     self.running = False
+                    break
             
             if self.running:
+                self.handle_events(events)
+
                 dt: float = self.clock.tick() / 1000.
+                self.update(dt)
                 self.window.update(dt)
 
                 self.window.render()
