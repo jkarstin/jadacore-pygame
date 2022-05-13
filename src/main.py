@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.10.2022 #
+# J Karstin Neill    05.13.2022 #
 #################################
 
 
@@ -11,10 +11,8 @@
 
 import sys
 
-from pygame.event import Event
-
 from jadacore.game import Game
-from jadacore.meta import EXIT_SUCCESS
+from jadacore.util import EXIT_SUCCESS
 
 from start_world import StartWorld
 

@@ -15,8 +15,9 @@ from pygame import Color, Surface, Rect, Vector2
 from pygame.sprite import Group, Sprite
 from typing import Optional
 
-from jadacore.meta import RESOURCES_PATH, PIXEL_SIZE, ERROR_UNNAMED_COMPONENT
+from jadacore.meta import RESOURCES_PATH, PIXEL_SIZE
 import jadacore.util.log as log
+from jadacore.util import ERROR_UNNAMED_COMPONENT
 
 
 ### CLASS DEFINITIONS ###

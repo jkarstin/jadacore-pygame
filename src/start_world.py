@@ -3,7 +3,7 @@
 #==================================#
 #                                  #
 #----------------------------------#
-# J Karstin Neill       05.11.2022 #
+# J Karstin Neill       05.13.2022 #
 ####################################
 
 
@@ -25,7 +25,7 @@ class StartWorld(World):
 
     ghost: Ghost = None
 
-    go_player: GoPlayer = None
+    go_player: GoPlayer     = None
     seek_player: SeekPlayer = None
 
 

@@ -11,7 +11,6 @@
 
 import sys
 
-from jadacore.meta import ERROR_GENERIC
 from . import Stylist
 
 
@@ -19,8 +18,10 @@ from . import Stylist
 
 LOG_STYLE_ERROR: str = Stylist.style('red', 'underline')
 
-
-### CLASS DEFINITIONS ###
+# EXIT/ERROR CODES
+EXIT_SUCCESS: int            = 0
+ERROR_GENERIC: int           = 1
+ERROR_UNNAMED_COMPONENT: int = 2
 
 
 ### FUNCTION DEFINITIONS ###
