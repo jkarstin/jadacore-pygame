@@ -1,2 +1,8 @@
-from .being import Animation, Component, Being
-from .game  import Game, Window, World
+__all__ = [
+    'being',
+    'comp',
+    'game',
+    'meta',
+    'player',
+    'util'
+]

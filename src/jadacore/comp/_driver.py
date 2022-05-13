@@ -1,5 +1,5 @@
 #################################
-# driver.py      [v0.0.1-alpha] #
+# _driver.py     [v0.0.1-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
@@ -11,11 +11,11 @@
 
 import pygame
 from pygame import Vector2
-from typing import Optional
 
-import jadacore
 from jadacore.being import Component
 from jadacore.meta import PIXEL_SIZE, PIXEL_SIZE_SQUARED
+
+from . import Motor
 
 
 ### CONSTANTS & FLAGS ###
@@ -35,21 +35,17 @@ class Driver(Component):
 
     ### FIELDS ###
 
-    motor: Optional['jadacore.being.Motor'] = None
-    move_speed: float                       = None
+    motor: Motor      = None
+    move_speed: float = None
 
     
     ### CONSTRUCTOR ###
 
-    def __init__(self, name: str, move_speed: float=None) -> None:
+    def __init__(self, name: str, motor: Motor, move_speed: float=None) -> None:
         Component.__init__(self, name)
 
+        self.motor = motor
         self.move_speed = move_speed if move_speed else DEFAULT_MOVE_SPEED
-
-    
-    def on_attach(self) -> None:
-        self.motor = self.being.fetch_component('motor')
-
 
 
 class KeyDriver(Driver):

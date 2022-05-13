@@ -1,5 +1,5 @@
 #################################
-# going.py       [v0.0.1-alpha] #
+# _going.py      [v0.0.1-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
@@ -9,7 +9,8 @@
 
 ### IMPORTS ###
 
-from . import Doing, KeyDriver
+from jadacore.comp import KeyDriver
+from . import Doing
 
 
 ### CLASS DEFINITIONS ###
@@ -39,6 +40,7 @@ class Going(Doing):
             down_keys,
             left_keys,
             right_keys,
-            move_speed=move_speed
+            move_speed=move_speed,
+            motor=self.motor
         )
         self.attach_component(self.driver)

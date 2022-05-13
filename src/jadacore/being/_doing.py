@@ -1,5 +1,5 @@
 #################################
-# doing.py       [v0.0.1-alpha] #
+# _doing.py      [v0.0.1-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
@@ -12,7 +12,8 @@
 from pathlib import Path
 from pygame import Vector2
 
-from . import Being, Animator, Animation, Motor
+from jadacore.comp import Animator, Animation, Motor
+from . import Being
 
 
 ### CLASS DEFINITIONS ###

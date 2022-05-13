@@ -1,3 +1,2 @@
-from .stylist import Stylist
-from .log     import error, sprint
-from .templ8r import Templ8r
+from ._stylist import Stylist
+from ._templ8r import Templ8r

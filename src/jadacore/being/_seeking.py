@@ -1,5 +1,5 @@
 #################################
-# seeking.py     [v0.0.1-alpha] #
+# _seeking.py    [v0.0.1-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
@@ -11,7 +11,8 @@
 
 from pygame import Vector2
 
-from . import Doing, Seeker
+from jadacore.comp import Seeker
+from . import Doing
 
 
 ### CLASS DEFINITIONS ###
@@ -28,7 +29,7 @@ class Seeking(Doing):
     def __init__(self, move_speed: float=None, **kwargs):
         Doing.__init__(self, **kwargs)
 
-        self.driver = Seeker('seeker', move_speed=move_speed)
+        self.driver = Seeker('seeker', move_speed=move_speed, motor=self.motor)
         self.attach_component(self.driver)
 
     

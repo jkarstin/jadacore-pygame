@@ -1,2 +1,2 @@
-from .go_player   import GoPlayer
-from .seek_player import SeekPlayer
+from ._go_player   import GoPlayer
+from ._seek_player import SeekPlayer

@@ -1,5 +1,5 @@
 #################################
-# being.py       [v0.0.1-alpha] #
+# _being.py      [v0.0.1-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
@@ -16,7 +16,7 @@ from pygame.sprite import Group, Sprite
 from typing import Optional
 
 from jadacore.meta import RESOURCES_PATH, PIXEL_SIZE, ERROR_UNNAMED_COMPONENT
-from jadacore.util import error
+import jadacore.util.log as log
 
 
 ### CLASS DEFINITIONS ###
@@ -99,7 +99,7 @@ class Component:
 
 
     def __init__(self, name: str):
-        if not name: error("Cannot initialize Component without a name!", ERROR_UNNAMED_COMPONENT)
+        if not name: log.error("Cannot initialize Component without a name!", ERROR_UNNAMED_COMPONENT)
         self.name = name
 
     
