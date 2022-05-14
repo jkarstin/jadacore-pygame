@@ -63,13 +63,14 @@ class KeyDriver(Driver):
 
     def __init__(self,
         name: str,
+        motor: Motor,
         up_keys: list[int]=None,
         down_keys: list[int]=None,
         left_keys: list[int]=None,
         right_keys: list[int]=None,
         **kwargs
     ) -> None:
-        Driver.__init__(self, name, **kwargs)
+        Driver.__init__(self, name, motor, **kwargs)
 
         self.up_keys    = up_keys    if up_keys    else DEFAULT_KEYS['up_key']
         self.down_keys  = down_keys  if down_keys  else DEFAULT_KEYS['down_key']
@@ -126,8 +127,8 @@ class Seeker(Driver):
 
     ### CONSTRUCTOR ###
 
-    def __init__(self, name: str, **kwargs):
-        Driver.__init__(self, name, **kwargs)
+    def __init__(self, name: str, motor: Motor, **kwargs):
+        Driver.__init__(self, name, motor, **kwargs)
 
         self.pix_mv_spd_sqrd = self.move_speed * self.move_speed * PIXEL_SIZE_SQUARED
 
