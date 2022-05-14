@@ -29,7 +29,11 @@ class Seeking(Doing):
     def __init__(self, move_speed: float=None, **kwargs):
         Doing.__init__(self, **kwargs)
 
-        self.driver = Seeker('seeker', move_speed=move_speed, motor=self.motor)
+        self.driver = Seeker(
+            'seeker',
+            self.motor,
+            move_speed=move_speed
+        )
         self.attach_component(self.driver)
 
     

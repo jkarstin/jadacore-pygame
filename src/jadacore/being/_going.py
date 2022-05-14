@@ -36,11 +36,11 @@ class Going(Doing):
 
         self.driver = KeyDriver(
             'key_driver',
+            self.motor,
             up_keys,
             down_keys,
             left_keys,
             right_keys,
-            move_speed=move_speed,
-            motor=self.motor
+            move_speed=move_speed
         )
         self.attach_component(self.driver)
