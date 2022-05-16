@@ -35,10 +35,10 @@ class StartWorld(World):
         self.ghost = Ghost(pos=Vector2(650, 125))
         self.add(self.ghost)
 
-        self.go_player = GoPlayer(pos=Vector2(200, 175))
+        self.go_player = GoPlayer('ghosti.ss.png', sprite_sheet_dims=Vector2(2), pos=Vector2(200, 175))
         self.add(self.go_player)
 
-        self.seek_player = SeekPlayer(move_speed=10, pos=Vector2(300, 150))
+        self.seek_player = SeekPlayer('ghosti.ss.png', sprite_sheet_dims=Vector2(2), move_speed=10, pos=Vector2(300, 150))
         self.seek_player.set_lamp_post(Vector2(400, -10))
         self.add(self.seek_player)
 

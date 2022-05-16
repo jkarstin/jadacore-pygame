@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.12.2022 #
+# J Karstin Neill    05.15.2022 #
 #################################
 
 
@@ -20,13 +20,16 @@ from . import Motor
 
 ### CONSTANTS & FLAGS ###
 
+# ::Driver
+DEFAULT_MOVE_SPEED: float = 10.0
+
+# ::KeyDriver
 DEFAULT_KEYS: dict[str, list[int]] = {
     'up_key':    [pygame.K_UP,    pygame.K_w],
     'down_key':  [pygame.K_DOWN,  pygame.K_s],
     'left_key':  [pygame.K_LEFT,  pygame.K_a],
     'right_key': [pygame.K_RIGHT, pygame.K_d]
 }
-DEFAULT_MOVE_SPEED: float = 10.0
 
 
 ### CLASS DEFINITIONS ###
@@ -41,11 +44,36 @@ class Driver(Component):
     
     ### CONSTRUCTOR ###
 
-    def __init__(self, name: str, motor: Motor, move_speed: float=None) -> None:
+    def __init__(self,
+        name: str,
+        motor: Motor=None,
+        move_speed: float=None
+    ) -> None:
         Component.__init__(self, name)
 
         self.motor = motor
+        if not self.motor:
+            self.motor = self.being.fetch_component('motor')
+            if not self.motor:
+                self.motor = Motor('motor')
+                self.being.attach_component(self.motor)
+
         self.move_speed = move_speed if move_speed else DEFAULT_MOVE_SPEED
+
+    
+    ### COMPONENT METHODS ###
+
+    def on_attach(self) -> None:
+        super().on_attach()
+
+
+    def update(self, dt: float) -> None:
+        super().update(dt)
+
+    
+    def on_detach(self) -> None:
+        super().on_detach()
+
 
 
 class KeyDriver(Driver):
@@ -63,14 +91,14 @@ class KeyDriver(Driver):
 
     def __init__(self,
         name: str,
-        motor: Motor,
+        motor: Motor=None,
+        move_speed: float=None,
         up_keys: list[int]=None,
         down_keys: list[int]=None,
         left_keys: list[int]=None,
-        right_keys: list[int]=None,
-        **kwargs
+        right_keys: list[int]=None
     ) -> None:
-        Driver.__init__(self, name, motor, **kwargs)
+        Driver.__init__(self, name, motor, move_speed)
 
         self.up_keys    = up_keys    if up_keys    else DEFAULT_KEYS['up_key']
         self.down_keys  = down_keys  if down_keys  else DEFAULT_KEYS['down_key']
@@ -80,6 +108,12 @@ class KeyDriver(Driver):
 
 
     ### COMPONENT METHODS ###
+
+    ### COMPONENT METHODS ###
+
+    def on_attach(self) -> None:
+        super().on_attach()
+
 
     def update(self, dt: float) -> None:
         keys_pressed: list[bool] = pygame.key.get_pressed()
@@ -116,6 +150,10 @@ class KeyDriver(Driver):
         self.motor.move(move_vect)
 
 
+    def on_detach(self) -> None:
+        super().on_detach()
+
+
 
 class Seeker(Driver):
 
@@ -127,13 +165,21 @@ class Seeker(Driver):
 
     ### CONSTRUCTOR ###
 
-    def __init__(self, name: str, motor: Motor, **kwargs):
-        Driver.__init__(self, name, motor, **kwargs)
+    def __init__(self,
+        name: str,
+        motor: Motor=None,
+        move_speed: float=None
+    ) -> None:
+        Driver.__init__(self, name, motor, move_speed)
 
         self.pix_mv_spd_sqrd = self.move_speed * self.move_speed * PIXEL_SIZE_SQUARED
 
 
     ### COMPONENT METHODS ###
+
+    def on_attach(self) -> None:
+        super().on_attach()
+
 
     def update(self, dt: float) -> None:
         if self.lamp_post:
@@ -154,7 +200,11 @@ class Seeker(Driver):
                 self.motor.move(delta)
     
 
+    def on_detach(self) -> None:
+        super().on_detach()
+
+
     ### OPERATIONAL METHODS ###
 
-    def set_lamp_post(self, lamp_post: Vector2=None):
+    def set_lamp_post(self, lamp_post: Vector2=None) -> None:
         self.lamp_post = lamp_post
