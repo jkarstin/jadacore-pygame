@@ -31,7 +31,12 @@ class Item(Component):
     """
     Description:
     ------------
+    Component subclass designed to allow the attached Being to
+    be usable in an Inventory.
 
+    Constructor:
+    ------------
+    Item(name: str, space: float=None, icon_path: Path=None) -> <Item>
     """
 
     ### FIELDS ###
@@ -50,16 +55,22 @@ class Item(Component):
         """
         Usage:
         ------
+        Item(name: str, space: float=None, icon_path: Path=None) -> <Item>
 
         Description:
         ------------
+        Constructor for Item Component subclass.
 
         Arguments:
         ----------
+        - name: str - Component name. [::Component]
+        - space: float=None - Amount of space Item takes up in Inventory.
+        - icon_path: Path=None - Path to icon image in resources to
+        use as Item image when viewed in Inventory.
 
         Returns:
         --------
-        
+        - <Item> - Instance of Item class.
         """
         Component.__init__(self, name)
 
@@ -319,9 +330,8 @@ class Inventory(Component):
                 if re.search(item_name_pattern, item_name):
                     dump_items[item_name] = self.items[item_name]
 
-                    loop: bool = True
-                    while loop:
+                    while True:
                         item, _ = self.remove_item(item_name)
-                        loop = not (item == None)
+                        if not item: break
 
         return dump_items, self.space_used
