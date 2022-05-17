@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.12.2022 #
+# J Karstin Neill    05.17.2022 #
 #################################
 
 
@@ -52,17 +52,17 @@ class Doing(Being):
 
         Arguments:
         ----------
-        - sprite_sheet_path: Path,
-        - sprite_sheet_dims: Vector2=None,
-        - frames_per_second: float=None,
-        - animation_style: int=None,
+        - sprite_sheet_path: Path
+        - sprite_sheet_dims: Vector2=None
+        - frames_per_second: float=None
+        - animation_style: int=None
         - default_anim_name: str=None
         - **kwargs:
-            - pos: Vector2=None               [::Being]
-            - size: Vector2=None              [::Being]
-            - color: Color=None               [::Being]
-            - image_path: Path=None           [::Being]
-            - groups: list[Group]=None        [::Being]
+            - pos: Vector2=None        [::Being]
+            - size: Vector2=None       [::Being]
+            - color: Color=None        [::Being]
+            - image_path: Path=None    [::Being]
+            - groups: list[Group]=None [::Being]
         
         Returns:
         --------

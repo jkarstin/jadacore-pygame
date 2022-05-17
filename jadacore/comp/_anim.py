@@ -19,6 +19,12 @@ from jadacore.meta import PIXEL_SIZE, RESOURCES_PATH
 
 ### CONSTANTS & FLAGS ###
 
+# ::Animation
+DEFAULT_SPRITE_SHEET_DIMS: Vector2 = Vector2(1)
+DEFAULT_FRAME_SECONDS: float       = 0.5
+DEFAULT_ANIM_STYLE: int            = 0
+
+# ::Animator
 DEFAULT_ANIM_NAME: str = 'anim_default'
 
 
@@ -59,9 +65,9 @@ class Animation(Component):
     def __init__(self,
         name: str,
         sprite_sheet_path: Path,
-        sprite_sheet_dims: Vector2=Vector2(1),
-        frames_per_second: float=2,
-        animation_style: int=ANIM_STYLE_LOOP
+        sprite_sheet_dims: Vector2=None,
+        frames_per_second: float=None,
+        animation_style: int=None
     ) -> None:
         Component.__init__(self, name)
 
@@ -74,12 +80,14 @@ class Animation(Component):
                 sprite_sheet_raw.get_height() * PIXEL_SIZE
             ]
         )
-        self.sprite_sheet_dims = sprite_sheet_dims if sprite_sheet_dims else Vector2(1)
+        self.sprite_sheet_dims = sprite_sheet_dims if sprite_sheet_dims else DEFAULT_SPRITE_SHEET_DIMS
 
         if frames_per_second and frames_per_second > 0.0:
             self.frame_seconds = 1.0 / frames_per_second
+        else:
+            self.frame_seconds = DEFAULT_FRAME_SECONDS
         
-        self.animation_style = animation_style if animation_style else Animation.ANIM_STYLE_LOOP
+        self.animation_style = animation_style if animation_style else DEFAULT_ANIM_STYLE
 
         # generate frames list
         n: int = int(sprite_sheet_dims.x) if sprite_sheet_dims.x > 1 else 1
@@ -225,9 +233,9 @@ class Animator(Component):
     def __init__(self,
         name: str,
         sprite_sheet_path: Path,
-        sprite_sheet_dims: Vector2=Vector2(1),
-        frames_per_second: float=2,
-        animation_style: int=Animation.ANIM_STYLE_LOOP,
+        sprite_sheet_dims: Vector2=None,
+        frames_per_second: float=None,
+        animation_style: int=None,
         default_anim_name: str=None
     ):
         Component.__init__(self, name)

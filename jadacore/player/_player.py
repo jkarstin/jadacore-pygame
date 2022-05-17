@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.14.2022 #
+# J Karstin Neill    05.17.2022 #
 #################################
 
 
@@ -11,43 +11,75 @@
 
 from pathlib import Path
 from pygame import Vector2
+from pygame.sprite import Group
 
-from jadacore.being import Doing
-from jadacore.comp import Driver, KeyDriver, Seeker, Item, Inventory
+from jadacore.being import Doing, ItemBeing
+from jadacore.comp import Driver, KeyDriver, Seeker, Item, Inventory, Interactor
 
 
 ### CLASS DEFINITIONS ###
 
 class Player(Doing):
+    """
+    Description:
+    ------------
+    Doing subclass designed to integrate Driver and Inventory alongside inherited
+    Animator and Motor Components to provide a base for user input and world interaction.
+
+    Note: Driver is not usually assigned in this class as it is primarily a base to extend from
+    for more specialized behaviors. A driver can be passed to the constructor, but this is
+    more a convenience for custom designs, and in general subclassing is better.
+
+    Constructor:
+    ------------
+    Player(sprite_sheet_path: Path, driver: Driver=None, **kwargs) -> <Player>
+    """
 
     ### FIELDS ###
 
-    driver: Driver       = None
-    inventory: Inventory = None
+    inventory: Inventory   = None
+    interactor: Interactor = None
+    driver: Driver         = None
 
 
     ### CONSTRUCTOR ###
 
     def __init__(self,
+        interact_group: Group,
         sprite_sheet_path: Path,
+        driver: Driver=None,
+        reach: float=None,
+        cue_icon_path: Path=None,
         **kwargs
     ) -> None:
         """
-        Player(sprite_sheet_path: Path, **kwargs)
+        Usage:
+        ------
+        Player(sprite_sheet_path: Path, driver: Driver=None, **kwargs) -> <Player>
+
+        Description:
+        ------------
+        Constructor for Player Doing subclass.
 
         Arguments:
         ----------
-        - sprite_sheet_path: Path             [::Doing]
+        - sprite_sheet_path: Path [::Doing] - Path to sprite sheet, which is set up in Doing superclass.
+        - interact_radius: float=None - Radius distance from Player pos within which interactions can occur.
+        - driver: Driver=None - Convenience argument for assigning a Driver upon creation. Almost always better to leave as None and assign within a subclass.
         - **kwargs:
-            - sprite_sheet_dims: Vector2=None [::Doing]
-            - frames_per_second: float=None   [::Doing]
-            - animation_style: int=None       [::Doing]
-            - default_anim_name: str=None     [::Doing]
-            - pos: Vector2=None               [::Being]
-            - size: Vector2=None              [::Being]
-            - color: Color=None               [::Being]
-            - image_path: Path=None           [::Being]
-            - groups: list[Group]=None        [::Being]
+            - sprite_sheet_dims: Vector2=None [::Doing] - 
+            - frames_per_second: float=None   [::Doing] - 
+            - animation_style: int=None       [::Doing] - 
+            - default_anim_name: str=None     [::Doing] - 
+            - pos: Vector2=None               [::Being] - 
+            - size: Vector2=None              [::Being] - 
+            - color: Color=None               [::Being] - 
+            - image_path: Path=None           [::Being] - 
+            - groups: list[Group]=None        [::Being] - 
+        
+        Returns:
+        --------
+        - <Player> - Instance of Player class.
         """
         Doing.__init__(self,
             sprite_sheet_path,
@@ -57,15 +89,63 @@ class Player(Doing):
         self.inventory = Inventory('inventory')
         self.attach_component(self.inventory)
 
+        self.interactor = Interactor(
+            'interactor',
+            interact_group,
+            reach,
+            cue_icon_path,
+            self.inventory
+        )
+        self.attach_component(self.interactor)
+
+        if driver:
+            self.driver = driver
+            self.driver.set_motor(self.motor)
+            self.attach_component(self.driver)
+
     
+    ### OPERATIONAL METHODS ###
+
+    def pick_up(self, item_being: ItemBeing=None) -> float:
+        if item_being:
+            return self.add_item(item_being.item)
+        
+        return self.inventory.space_used
+
+
     ### WRAPPING METHODS ###
 
     def add_item(self, item: Item=None) -> float:
+        """
+        Usage:
+        ------
+        <Player>.add_item(item: Item=None) -> float
+
+        Description:
+        ------------
+        Wraps <Inventory>.add_item(...) method used to add Item to Player Inventory.
+
+        Arguments:
+        ----------
+        - item: Item=None - Item instance to add to Player Inventory.
+
+        Returns:
+        --------
+        - space_used: float - Amount of space currently being used in Player Inventory after trying to add the Item.
+        """
         return self.inventory.add_item(item)
 
 
 
-class GoPlayer(Player):
+class KeyPlayer(Player):
+    """
+    Description:
+    ------------
+
+    Constructor:
+    ------------
+    
+    """
 
     ### FIELDS ###
 
@@ -75,11 +155,13 @@ class GoPlayer(Player):
     ### CONSTRUCTOR ###
 
     def __init__(self,
+        interact_group: Group,
         sprite_sheet_path: Path,
         move_speed: float=None,
         **kwargs
     ) -> None:
         Player.__init__(self,
+            interact_group,
             sprite_sheet_path,
             **kwargs
         )
@@ -87,13 +169,21 @@ class GoPlayer(Player):
         self.driver = KeyDriver(
             'key_driver',
             self.motor,
-            move_speed=move_speed
+            move_speed
         )
         self.attach_component(self.driver)
 
 
 
 class SeekPlayer(Player):
+    """
+    Description:
+    ------------
+
+    Constructor:
+    ------------
+
+    """
 
     ### FIELDS ###
 
@@ -103,11 +193,13 @@ class SeekPlayer(Player):
     ### CONSTRUCTOR ###
 
     def __init__(self,
+        interact_group: Group,
         sprite_sheet_path: Path,
         move_speed: float=None,
         **kwargs
     ) -> None:
         Player.__init__(self,
+            interact_group,
             sprite_sheet_path,
             **kwargs
         )
@@ -115,7 +207,7 @@ class SeekPlayer(Player):
         self.driver = Seeker(
             'seeker',
             self.motor,
-            move_speed=move_speed
+            move_speed
         )
         self.attach_component(self.driver)
     

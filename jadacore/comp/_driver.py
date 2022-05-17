@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.15.2022 #
+# J Karstin Neill    05.16.2022 #
 #################################
 
 
@@ -64,7 +64,8 @@ class Driver(Component):
     ### COMPONENT METHODS ###
 
     def on_attach(self) -> None:
-        super().on_attach()
+        if not self.motor:
+            self.motor = self.being.fetch_component('motor')
 
 
     def update(self, dt: float) -> None:
@@ -73,6 +74,14 @@ class Driver(Component):
     
     def on_detach(self) -> None:
         super().on_detach()
+
+    
+    ### AUXILIARY METHODS ###
+
+    def set_motor(self, motor: Motor=None) -> None:
+        self.motor = motor
+        if self.being and self.motor and not self.motor.being:
+            self.being.attach_component(self.motor)
 
 
 

@@ -1,1 +1,1 @@
-from ._player      import Player, GoPlayer, SeekPlayer
+from ._player      import Player, KeyPlayer, SeekPlayer

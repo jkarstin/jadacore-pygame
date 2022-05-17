@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.11.2022 #
+# J Karstin Neill    05.17.2022 #
 #################################
 
 
@@ -23,7 +23,7 @@ from jadacore.util import ERROR_UNNAMED_COMPONENT
 ### CONSTANTS & FLAGS ###
 
 # ::Being
-DEFAULT_POS: Vector2  = Vector2()
+DEFAULT_POS: Vector2 = Vector2()
 DEFAULT_SIZE: Vector2 = Vector2(1)
 DEFAULT_COLOR: Color  = Color('pink')
 
@@ -39,6 +39,7 @@ class Being(Sprite):
 
     ### FIELDS ###
 
+    pos: Vector2   = None
     size: Vector2  = None
     image: Surface = None
     rect: Rect     = None
@@ -58,22 +59,23 @@ class Being(Sprite):
         """
         Usage:
         ------
-        Being(pos: Vector2=None, size: Vector2=None, color: Color=None, image_path: Path=None, groups: list[Group]=None)
+        Being(pos: Vector2=None, size: Vector2=None, color: Color=None, image_path: Path=None, groups: list[Group]=None) -> <Being>
 
         Description:
         ------------
+        Constructor for Being Sprite subclass.
 
         Arguments:
         ----------
-        - pos: Vector2=None
-        - size: Vector2=None
-        - color: Color=None
-        - image_path: Path=None
-        - groups: list[Group]=None
+        - pos: Vector2=None -
+        - size: Vector2=None - 
+        - color: Color=None - 
+        - image_path: Path=None - 
+        - groups: list[Group]=None - 
 
         Returns:
         --------
-
+        - <Being> - Instance of Being class.
         """
         Sprite.__init__(self)
 
@@ -198,7 +200,23 @@ class Component:
     """
     Description:
     ------------
+    Components are a basic building block for Being behavior in jadacore. They are very closely linked with the Being class,
+    and function as extendable virtual plug-ins that allow for modular customization of specilized characteristics.
 
+    In short: this is a superclass template which provides three specific methods that can be used to initialize (on_attach),
+    adjust/maintain/interact during the game loop (update) and then clean up when no longer needed (on_detach). Some important
+    and commonly-used Component subclasses are already made in the jadacore library in the jadacore.comp package, if you would
+    like to see different implementations of Component behavior.
+
+    Every Component has a name string, for look-up in their attached Being instances, and a reference to said attached Being, if
+    one exists. This Being instance is automatically assigned when attached to a Being (by the Being class), and removed upon
+    detaching (again, by the Being class), so you can check to see if a given Component is attached by checking if the Being
+    instance is None or not. The on_attach and on_detach methods are provided for further design control, and do not need to call
+    their overridden parent methods in order to maintain the Being assignment, since it is handled by the Being class.
+
+    Constructor:
+    ------------
+    Component(name: str) -> <Component>
     """
     name: str    = None
     being: Being = None
@@ -208,19 +226,19 @@ class Component:
         """
         Usage:
         ------
-
+        Component(name: str) -> <Component>
 
         Description:
         ------------
-
+        Constructor for Component class.
 
         Arguments:
         ----------
-        
+        - name: str - Name of the Component instance.        
 
         Returns:
         --------
-
+        - <Component> - Instance of Component class.
         """
         if not name: log.error("Cannot initialize Component without a name!", ERROR_UNNAMED_COMPONENT)
         self.name = name

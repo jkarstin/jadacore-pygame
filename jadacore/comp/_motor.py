@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.11.2022 #
+# J Karstin Neill    05.17.2022 #
 #################################
 
 
@@ -28,7 +28,6 @@ class Motor(Component):
 
     ### FIELDS ###
 
-    pos: Vector2       = None
     move_vect: Vector2 = None
 
 
