@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.07.2022 #
+# J Karstin Neill    05.18.2022 #
 #################################
 
 
@@ -27,6 +27,7 @@ class World:
 
     world_group: Group    = None
     interact_group: Group = None
+    icon_group: Group     = None
     world_screen: Surface = None
 
 
@@ -35,6 +36,7 @@ class World:
     def __init__(self) -> None:
         self.world_group = Group()
         self.interact_group = Group()
+        self.icon_group = Group()
         self.world_screen = Surface(WINDOW_SIZE)
         self.setup()
 
@@ -47,11 +49,14 @@ class World:
 
     def update_world(self, dt: float) -> None:
         self.world_group.update(dt)
+        self.icon_group.update(dt)
 
     
     def draw(self, base_screen: Surface) -> None:
         self.world_group.clear(base_screen, self.world_screen)
+        self.icon_group.clear(base_screen, self.world_screen)
         self.world_group.draw(base_screen)
+        self.icon_group.draw(base_screen)
 
 
     ### UTILITY FUNCTIONS ###
@@ -60,4 +65,4 @@ class World:
         for being in beings:
             if isinstance(being, ItemBeing):
                 self.interact_group.add(being)
-        self.world_group.add(*beings)
+            self.world_group.add(*beings)

@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.17.2022 #
+# J Karstin Neill    05.18.2022 #
 #################################
 
 
@@ -14,7 +14,7 @@ from pygame import Vector2
 from pygame.sprite import Group
 
 from jadacore.being import Doing, ItemBeing
-from jadacore.comp import Driver, KeyDriver, Seeker, Item, Inventory, Interactor
+from jadacore.comp import KeyInput, Driver, KeyDriver, Seeker, Item, Inventory, Interactor
 
 
 ### CLASS DEFINITIONS ###
@@ -38,6 +38,7 @@ class Player(Doing):
     ### FIELDS ###
 
     inventory: Inventory   = None
+    key_input: KeyInput    = None
     interactor: Interactor = None
     driver: Driver         = None
 
@@ -46,10 +47,12 @@ class Player(Doing):
 
     def __init__(self,
         interact_group: Group,
+        icon_group: Group,
         sprite_sheet_path: Path,
         driver: Driver=None,
         reach: float=None,
         cue_icon_path: Path=None,
+        interact_key: int=None,
         **kwargs
     ) -> None:
         """
@@ -63,9 +66,13 @@ class Player(Doing):
 
         Arguments:
         ----------
+        - interact_group: Group             - Group of ItemBeing instances which Interactor will interact with.
+        - icon_group: Group                 - Group to which icon images should be drawn for Interactor.
         - sprite_sheet_path: Path [::Doing] - Path to sprite sheet, which is set up in Doing superclass.
-        - interact_radius: float=None - Radius distance from Player pos within which interactions can occur.
-        - driver: Driver=None - Convenience argument for assigning a Driver upon creation. Almost always better to leave as None and assign within a subclass.
+        - driver: Driver=None               - Convenience argument for assigning a Driver upon creation. Almost always better to leave as None and assign within a subclass.
+        - reach: float=None                 - Radius distance from Player pos within which interactions can occur.
+        - cue_icon_path: Path=None          - Path to cue icon image which will appear near interactable ItemBeings.
+        - interact_key: int=None            - Integer keycode representing the key used in Interactor interactions.
         - **kwargs:
             - sprite_sheet_dims: Vector2=None [::Doing] - 
             - frames_per_second: float=None   [::Doing] - 
@@ -89,12 +96,18 @@ class Player(Doing):
         self.inventory = Inventory('inventory')
         self.attach_component(self.inventory)
 
+        self.key_input = KeyInput('key_input')
+        self.attach_component(self.key_input)
+
         self.interactor = Interactor(
             'interactor',
             interact_group,
+            icon_group,
             reach,
             cue_icon_path,
-            self.inventory
+            self.inventory,
+            self.key_input,
+            interact_key
         )
         self.attach_component(self.interactor)
 
@@ -156,12 +169,14 @@ class KeyPlayer(Player):
 
     def __init__(self,
         interact_group: Group,
+        icon_group: Group,
         sprite_sheet_path: Path,
         move_speed: float=None,
         **kwargs
     ) -> None:
         Player.__init__(self,
             interact_group,
+            icon_group,
             sprite_sheet_path,
             **kwargs
         )
@@ -194,12 +209,14 @@ class SeekPlayer(Player):
 
     def __init__(self,
         interact_group: Group,
+        icon_group: Group,
         sprite_sheet_path: Path,
         move_speed: float=None,
         **kwargs
     ) -> None:
         Player.__init__(self,
             interact_group,
+            icon_group,
             sprite_sheet_path,
             **kwargs
         )

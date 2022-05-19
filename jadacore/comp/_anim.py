@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.12.2022 #
+# J Karstin Neill    05.18.2022 #
 #################################
 
 
@@ -90,8 +90,8 @@ class Animation(Component):
         self.animation_style = animation_style if animation_style else DEFAULT_ANIM_STYLE
 
         # generate frames list
-        n: int = int(sprite_sheet_dims.x) if sprite_sheet_dims.x > 1 else 1
-        m: int = int(sprite_sheet_dims.y) if sprite_sheet_dims.y > 1 else 1
+        n: int = int(self.sprite_sheet_dims.x) if self.sprite_sheet_dims.x > 1 else 1
+        m: int = int(self.sprite_sheet_dims.y) if self.sprite_sheet_dims.y > 1 else 1
 
         w, h = self.sprite_sheet.get_size()
         

@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.17.2022 #
+# J Karstin Neill    05.18.2022 #
 #################################
 
 
@@ -12,9 +12,9 @@
 from pathlib import Path
 
 from jadacore.comp import Item
-from . import Being
+from . import Doing
 
-class ItemBeing(Being):
+class ItemBeing(Doing):
 
     ### FIELDS ###
 
@@ -24,12 +24,13 @@ class ItemBeing(Being):
     ### CONSTRUCTOR ###
 
     def __init__(self,
-        name: str,
+        sprite_sheet_path: Path,
+        name: str,        
         space: float=None,
         icon_path: Path=None,
         **kwargs
     ):
-        Being.__init__(self, **kwargs)
+        Doing.__init__(self, sprite_sheet_path, **kwargs)
 
         self.item = Item(name, space, icon_path)
         self.attach_component(self.item)

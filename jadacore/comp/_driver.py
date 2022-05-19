@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.16.2022 #
+# J Karstin Neill    05.18.2022 #
 #################################
 
 
@@ -15,7 +15,7 @@ from pygame import Vector2
 from jadacore.being import Component
 from jadacore.meta import PIXEL_SIZE, PIXEL_SIZE_SQUARED
 
-from . import Motor
+from . import Motor, KeyInput
 
 
 ### CONSTANTS & FLAGS ###
@@ -52,12 +52,6 @@ class Driver(Component):
         Component.__init__(self, name)
 
         self.motor = motor
-        if not self.motor:
-            self.motor = self.being.fetch_component('motor')
-            if not self.motor:
-                self.motor = Motor('motor')
-                self.being.attach_component(self.motor)
-
         self.move_speed = move_speed if move_speed else DEFAULT_MOVE_SPEED
 
     
@@ -66,6 +60,9 @@ class Driver(Component):
     def on_attach(self) -> None:
         if not self.motor:
             self.motor = self.being.fetch_component('motor')
+            if not self.motor:
+                self.motor = Motor('motor')
+                self.being.attach_component(self.motor)
 
 
     def update(self, dt: float) -> None:
@@ -89,6 +86,7 @@ class KeyDriver(Driver):
 
     ### FIELDS ###
 
+    key_input: KeyInput   = None
     up_keys: list[int]    = None
     down_keys: list[int]  = None
     left_keys: list[int]  = None
@@ -101,6 +99,7 @@ class KeyDriver(Driver):
     def __init__(self,
         name: str,
         motor: Motor=None,
+        key_input: KeyInput=None,
         move_speed: float=None,
         up_keys: list[int]=None,
         down_keys: list[int]=None,
@@ -108,6 +107,8 @@ class KeyDriver(Driver):
         right_keys: list[int]=None
     ) -> None:
         Driver.__init__(self, name, motor, move_speed)
+
+        self.key_input = key_input
 
         self.up_keys    = up_keys    if up_keys    else DEFAULT_KEYS['up_key']
         self.down_keys  = down_keys  if down_keys  else DEFAULT_KEYS['down_key']
@@ -122,19 +123,24 @@ class KeyDriver(Driver):
 
     def on_attach(self) -> None:
         super().on_attach()
+        
+        if not self.key_input:
+            self.key_input = self.being.fetch_component('key_input')
+            if not self.key_input:
+                self.key_input = KeyInput('key_input')
+                self.being.attach_component(self.key_input)
 
 
     def update(self, dt: float) -> None:
-        keys_pressed: list[bool] = pygame.key.get_pressed()
-
-
         def tickle_keys(keylist: list[int]) -> None:
             for key in keylist:
-                if keys_pressed[key]:
+                if self.key_input.check_key(key):
                     if key not in self.keys_held:
                         self.keys_held.append(key)
+                        self.key_input.pull_key(key)
                 elif key in self.keys_held:
                     self.keys_held.remove(key)
+                    self.key_input.pull_key(key)
 
         tickle_keys(self.up_keys)
         tickle_keys(self.down_keys)
