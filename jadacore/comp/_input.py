@@ -31,7 +31,7 @@ class KeyInput(Component):
     ) -> None:
         Component.__init__(self, name)
 
-        self.key_presses = []
+        self.key_pressed = []
         self.key_pulled  = []
 
 
@@ -50,13 +50,17 @@ class KeyInput(Component):
 
     ### OPERATIONAL METHODS ###
 
-    def check_key(self, key: int) -> bool:
+    def check_key(self, key: int, pull: bool=False) -> bool:
+        key_state: bool = False
+
         if self.key_pressed and key in range(len(self.key_pressed)):
-            return (self.key_pressed[key] and not self.key_pulled[key])
-        
-        return False
+            key_state = (self.key_pressed[key] and not self.key_pulled[key])
 
-
-    def pull_key(self, key: int) -> None:
-        if self.key_pulled and key in range(len(self.key_pulled)):
+        if pull and self.key_pulled and key in range(len(self.key_pulled)):
             self.key_pulled[key] = True
+        
+        return key_state
+
+
+    def pull_key(self, key: int) -> bool:
+        return self.check_key(key, pull=True)

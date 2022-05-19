@@ -113,8 +113,7 @@ class Interactor(Component):
                 item_being.remove(item_being.groups())
                 self.inventory.add_item(item_being.item)
 
-        if self.key_input.check_key(self.interact_key):
-            self.key_input.pull_key(self.interact_key)
+        if self.key_input.pull_key(self.interact_key):
             interact_with(*collided_sprites)
             
 
