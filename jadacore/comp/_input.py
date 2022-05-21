@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.18.2022 #
+# J Karstin Neill    05.21.2022 #
 #################################
 
 
@@ -21,7 +21,7 @@ class KeyInput(Component):
     ### FIELDS ###
 
     key_pressed: list[bool] = None
-    key_pulled: list[bool]  = None
+    key_pulled: list[int]   = None
 
 
     ### CONSTRUCTOR ###
@@ -42,7 +42,7 @@ class KeyInput(Component):
 
     def update(self, dt: float) -> None:
         self.key_pressed = pygame.key.get_pressed()
-        self.key_pulled = [False] * len(self.key_pressed)
+        self.key_pulled = []
 
 
     def on_detach(self) -> None: super().on_detach()
@@ -53,11 +53,11 @@ class KeyInput(Component):
     def check_key(self, key: int, pull: bool=False) -> bool:
         key_state: bool = False
 
-        if self.key_pressed and key in range(len(self.key_pressed)):
-            key_state = (self.key_pressed[key] and not self.key_pulled[key])
-
-        if pull and self.key_pulled and key in range(len(self.key_pulled)):
-            self.key_pulled[key] = True
+        K: int = len(self.key_pressed)
+        if key in range(K) and key not in self.key_pulled:
+            key_state = self.key_pressed[key]
+            if pull:
+                self.key_pulled.append(key)
         
         return key_state
 
