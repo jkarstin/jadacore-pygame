@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.18.2022 #
+# J Karstin Neill    05.31.2022 #
 #################################
 
 
@@ -94,10 +94,10 @@ class Player(Doing):
         )
 
         self.inventory = Inventory('inventory')
-        self.attach_component(self.inventory)
+        self.attach(self.inventory)
 
         self.key_input = KeyInput('key_input')
-        self.attach_component(self.key_input)
+        self.attach(self.key_input)
 
         self.interactor = Interactor(
             'interactor',
@@ -109,12 +109,12 @@ class Player(Doing):
             self.key_input,
             interact_key
         )
-        self.attach_component(self.interactor)
+        self.attach(self.interactor)
 
         if driver:
             self.driver = driver
             self.driver.set_motor(self.motor)
-            self.attach_component(self.driver)
+            self.attach(self.driver)
 
     
     ### OPERATIONAL METHODS ###
@@ -186,7 +186,7 @@ class KeyPlayer(Player):
             self.motor,
             move_speed
         )
-        self.attach_component(self.driver)
+        self.attach(self.driver)
 
 
 
@@ -226,7 +226,7 @@ class SeekPlayer(Player):
             self.motor,
             move_speed
         )
-        self.attach_component(self.driver)
+        self.attach(self.driver)
     
 
     ### WRAPPING METHODS ###

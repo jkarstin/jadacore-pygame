@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.17.2022 #
+# J Karstin Neill    05.31.2022 #
 #################################
 
 
@@ -71,7 +71,7 @@ class Doing(Being):
         Being.__init__(self, **kwargs)
 
         self.motor = Motor('motor')
-        self.attach_component(self.motor)
+        self.attach(self.motor)
 
         self.animator = Animator(
             'animator',
@@ -81,7 +81,7 @@ class Doing(Being):
             animation_style,
             default_anim_name
         )
-        self.attach_component(self.animator)
+        self.attach(self.animator)
 
         self.animator.start()
 

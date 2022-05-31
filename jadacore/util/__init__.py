@@ -5,3 +5,4 @@ from .log import (
     ERROR_UNNAMED_COMPONENT
 )
 from ._templ8r import Templ8r
+from .pixel import pox

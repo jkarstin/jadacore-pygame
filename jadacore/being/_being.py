@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.17.2022 #
+# J Karstin Neill    05.31.2022 #
 #################################
 
 
@@ -13,11 +13,44 @@ from pathlib import Path
 import pygame
 from pygame import Color, Surface, Rect, Vector2
 from pygame.sprite import Group, Sprite
-from typing import Optional
 
 from jadacore.meta import RESOURCES_PATH, PIXEL_SIZE
+import jadacore.util as util
 import jadacore.util.log as log
 from jadacore.util import ERROR_UNNAMED_COMPONENT
+
+
+### CLASS STUBS ###
+
+class Being(Sprite):
+    def __init__(self,
+        pos: Vector2=None,
+        size: Vector2=None,
+        color: Color=None,
+        image_path: Path=None,
+        groups: list[Group]=None
+    ): ...
+class Component:
+    def __init__(self,
+        name: str
+    ): ...
+
+
+class Component:
+    name: str
+    being: Being
+    def __init__(self,
+        name: str
+    ): ...
+    def attach_to(self,
+        being: Being=None
+    ) -> Component: ...
+    def detach_from(self,
+        being: Being=None
+    ) -> Component: ...
+    def on_attach(self): ...
+    def on_detach(self): ...
+    def update(self, dt: float): ...
 
 
 ### CONSTANTS & FLAGS ###
@@ -44,7 +77,7 @@ class Being(Sprite):
     image: Surface = None
     rect: Rect     = None
 
-    components: dict[str, Optional['Component']] = None
+    components: dict[str, Component] = None
 
 
     ### CONSTRUCTOR ###
@@ -55,7 +88,7 @@ class Being(Sprite):
         color: Color=None,
         image_path: Path=None,
         groups: list[Group]=None
-    ) -> None:
+    ):
         """
         Usage:
         ------
@@ -102,7 +135,7 @@ class Being(Sprite):
 
     ### OPERATIONAL METHODS ###
 
-    def update(self, dt: float) -> None:
+    def update(self, dt: float):
         """
         Usage:
         ------
@@ -120,13 +153,20 @@ class Being(Sprite):
         --------
 
         """
-        for comp_name in self.components:
-            self.components[comp_name].update(dt)
+        for name in self.components:
+            self.components[name].update(dt)
+
+        
+    def pre_render(self):
+        if self.pos:
+            pox: Vector2 = util.pox(self.pos)
+            self.rect.centerx = pox.x
+            self.rect.bottom  = pox.y
 
     
     ### AUXILIARY METHODS ###
     
-    def attach_component(self, component: Optional['Component']=None) -> None:
+    def attach(self, component: Component=None):
         """
         Usage:
         ------
@@ -149,7 +189,7 @@ class Being(Sprite):
             component.attach_to(self)
 
 
-    def fetch_component(self, comp_name: str) -> Optional['Component']:
+    def fetch_component(self, name: str) -> Component:
         """
         Usage:
         ------
@@ -167,12 +207,12 @@ class Being(Sprite):
         --------
 
         """
-        if comp_name and comp_name in self.components:
-            return self.components[comp_name]
+        if name and name in self.components:
+            return self.components[name]
         return None
 
     
-    def detach_component(self, component: Optional['Component']=None) -> None:
+    def detach(self, component: Component=None):
         """
         Usage:
         ------
@@ -244,7 +284,45 @@ class Component:
         self.name = name
 
     
-    def on_attach(self) -> None:
+    def on_attach(self):
+        """
+        Usage:
+        ------
+
+
+        Description:
+        ------------
+
+
+        Arguments:
+        ----------
+        
+
+        Returns:
+        --------
+
+        """
+        pass
+    def on_detach(self):
+        """
+        Usage:
+        ------
+
+
+        Description:
+        ------------
+
+
+        Arguments:
+        ----------
+        
+
+        Returns:
+        --------
+
+        """
+        pass
+    def update(self, dt: float):
         """
         Usage:
         ------
@@ -265,49 +343,7 @@ class Component:
         pass
 
 
-    def update(self, dt: float) -> None:
-        """
-        Usage:
-        ------
-
-
-        Description:
-        ------------
-
-
-        Arguments:
-        ----------
-        
-
-        Returns:
-        --------
-
-        """
-        pass
-
-
-    def on_detach(self) -> None:
-        """
-        Usage:
-        ------
-
-
-        Description:
-        ------------
-
-
-        Arguments:
-        ----------
-        
-
-        Returns:
-        --------
-
-        """
-        pass
-
-
-    def attach_to(self, being: Being=None) -> None:
+    def attach_to(self, being: Being=None):
         """
         Usage:
         ------
@@ -327,12 +363,12 @@ class Component:
         """
         if being:
             if self.being:
-                self.being.detach_component(self)
+                self.being.detach(self)
             self.being = being
             self.on_attach()
 
     
-    def detach_from(self, being: Being=None) -> None:
+    def detach_from(self, being: Being=None):
         """
         Usage:
         ------
@@ -350,7 +386,6 @@ class Component:
         --------
 
         """
-        if being:
-            if self.being and self.being == being:
-                self.on_detach()
-                self.being = None
+        if being and self.being == being:
+            self.on_detach()
+            self.being = None

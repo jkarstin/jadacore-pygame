@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.18.2022 #
+# J Karstin Neill    05.31.2022 #
 #################################
 
 
@@ -33,4 +33,4 @@ class ItemBeing(Doing):
         Doing.__init__(self, sprite_sheet_path, **kwargs)
 
         self.item = Item(name, space, icon_path)
-        self.attach_component(self.item)
+        self.attach(self.item)

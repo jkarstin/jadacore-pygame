@@ -3,7 +3,7 @@
 #================================#
 #                                #
 #--------------------------------#
-# J Karstin Neill     05.18.2022 #
+# J Karstin Neill     05.31.2022 #
 ##################################
 
 
@@ -11,7 +11,7 @@
 
 from pathlib import Path
 import pygame
-from pygame import Rect, Surface, Vector2
+from pygame import Rect, Surface
 from pygame.sprite import Group, Sprite
 from typing import Optional
 
@@ -23,7 +23,7 @@ from . import Inventory, KeyInput
 
 ### CONSTANTS & FLAG ###
 
-DEFAULT_REACH: float      = 10.0
+DEFAULT_REACH: float      = 20
 DEFAULT_INTERACT_KEY: int = pygame.K_e
 
 
@@ -63,7 +63,7 @@ class Interactor(Component):
         self.interact_group = interact_group
         self.icon_group = icon_group
 
-        self.reach = reach if reach else DEFAULT_REACH
+        self.reach = reach * PIXEL_SIZE if reach else DEFAULT_REACH * PIXEL_SIZE
         self.reach_sqrd = self.reach * self.reach
         self.reach_check = Sprite()
         self.reach_check.rect = Rect(

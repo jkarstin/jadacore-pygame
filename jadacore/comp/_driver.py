@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.18.2022 #
+# J Karstin Neill    05.31.2022 #
 #################################
 
 
@@ -62,7 +62,7 @@ class Driver(Component):
             self.motor = self.being.fetch_component('motor')
             if not self.motor:
                 self.motor = Motor('motor')
-                self.being.attach_component(self.motor)
+                self.being.attach(self.motor)
 
 
     def update(self, dt: float) -> None:
@@ -78,7 +78,7 @@ class Driver(Component):
     def set_motor(self, motor: Motor=None) -> None:
         self.motor = motor
         if self.being and self.motor and not self.motor.being:
-            self.being.attach_component(self.motor)
+            self.being.attach(self.motor)
 
 
 
@@ -128,7 +128,7 @@ class KeyDriver(Driver):
             self.key_input = self.being.fetch_component('key_input')
             if not self.key_input:
                 self.key_input = KeyInput('key_input')
-                self.being.attach_component(self.key_input)
+                self.being.attach(self.key_input)
 
 
     def update(self, dt: float) -> None:

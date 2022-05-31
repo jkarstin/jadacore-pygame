@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.17.2022 #
+# J Karstin Neill    05.31.2022 #
 #################################
 
 
@@ -39,9 +39,6 @@ class Motor(Component):
                 self.being.pos.x += self.move_vect.x * PIXEL_SIZE * dt
                 self.being.pos.y += self.move_vect.y * PIXEL_SIZE * dt
                 self.move_vect = None
-            
-            self.being.rect.x = int(self.being.pos.x / PIXEL_SIZE) * PIXEL_SIZE
-            self.being.rect.y = int(self.being.pos.y / PIXEL_SIZE) * PIXEL_SIZE
 
     
     ### OPERATIONAL METHODS ###
@@ -83,8 +80,8 @@ class StepMotor(Motor):
                 self.being.pos.y += self.move_vect.y * pixel_step * dt / self.min_step_time
                 self.move_vect = None
             
-            self.being.rect.x = int(self.being.pos.x / pixel_step) * pixel_step
-            self.being.rect.y = int(self.being.pos.y / pixel_step) * pixel_step
+            #self.being.rect.x = int(self.being.pos.x / pixel_step) * pixel_step
+            #self.being.rect.y = int(self.being.pos.y / pixel_step) * pixel_step
 
 
     ### WRAPPER METHODS ###

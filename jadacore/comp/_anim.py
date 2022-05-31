@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.18.2022 #
+# J Karstin Neill    05.31.2022 #
 #################################
 
 
@@ -258,18 +258,18 @@ class Animator(Component):
 
     def on_attach(self) -> None:
         if self.being:
-            self.being.attach_component(self.current_animation)
+            self.being.attach(self.current_animation)
 
 
     def update(self, dt: float) -> None:
         self.current_animation = self.animations[self.current_anim_name]
         if self.being:
-            self.being.attach_component(self.current_animation)
+            self.being.attach(self.current_animation)
 
 
     def on_detach(self) -> None: 
         if self.being:
-            self.being.detach_component(self.current_animation)
+            self.being.detach(self.current_animation)
 
 
     ### OPERATIONAL METHODS ###

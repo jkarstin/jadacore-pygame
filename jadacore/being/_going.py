@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.12.2022 #
+# J Karstin Neill    05.31.2022 #
 #################################
 
 
@@ -43,4 +43,4 @@ class Going(Doing):
             right_keys,
             move_speed=move_speed
         )
-        self.attach_component(self.driver)
+        self.attach(self.driver)

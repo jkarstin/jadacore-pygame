@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.18.2022 #
+# J Karstin Neill    05.31.2022 #
 #################################
 
 
@@ -55,6 +55,11 @@ class World:
     def draw(self, base_screen: Surface) -> None:
         self.world_group.clear(base_screen, self.world_screen)
         self.icon_group.clear(base_screen, self.world_screen)
+
+        for sprite in self.world_group.sprites():
+            being: Being = sprite
+            being.pre_render()
+
         self.world_group.draw(base_screen)
         self.icon_group.draw(base_screen)
 
