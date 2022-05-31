@@ -11,8 +11,7 @@
 
 from pygame import Vector2
 
-from jadacore.comp import Seeker
-from . import Doing
+from . import Seeker, Doing
 
 
 ### CLASS DEFINITIONS ###

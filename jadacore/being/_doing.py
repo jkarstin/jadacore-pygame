@@ -12,8 +12,7 @@
 from pathlib import Path
 from pygame import Vector2
 
-from jadacore.comp import Animator, Animation, Motor
-from . import Being
+from . import Being, Animator, Animation, Motor
 
 
 ### CLASS DEFINITIONS ###

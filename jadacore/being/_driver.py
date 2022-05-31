@@ -12,10 +12,9 @@
 import pygame
 from pygame import Vector2
 
-from jadacore.being import Component
 from jadacore.meta import PIXEL_SIZE, PIXEL_SIZE_SQUARED
 
-from . import Motor, KeyInput
+from . import Component, Motor, KeyInput
 
 
 ### CONSTANTS & FLAGS ###

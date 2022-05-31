@@ -11,7 +11,7 @@
 
 import pygame
 
-from jadacore.being import Component
+from . import Component
 
 
 ### CLASS DEFINITIONS ###

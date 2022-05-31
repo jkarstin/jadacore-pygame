@@ -13,8 +13,10 @@ from pathlib import Path
 from pygame import Vector2
 from pygame.sprite import Group
 
-from jadacore.being import Doing, ItemBeing
-from jadacore.comp import KeyInput, Driver, KeyDriver, Seeker, Item, Inventory, Interactor
+from jadacore.being import (
+    KeyInput, Driver, KeyDriver, Seeker, Item, Inventory, Interactor,
+    Doing, ItemBeing
+)
 
 
 ### CLASS DEFINITIONS ###

@@ -13,12 +13,29 @@ from pathlib import Path
 import pygame
 from pygame import Rect, Surface
 from pygame.sprite import Group, Sprite
-from typing import Optional
-
-import jadacore.being
-from jadacore.being import Component
 from jadacore.meta import RESOURCES_PATH, PIXEL_SIZE
-from . import Inventory, KeyInput
+import jadacore.util.log as log
+
+from . import Component, Inventory, KeyInput, ItemBeing
+
+
+### CLASS STUBS ###
+
+class Interaction(Component):
+    def __init__(self,
+        name: str
+    ): ...
+class Interactor(Component):
+    def __init__(self,
+        name: str,
+        interact_group: Group,
+        icon_group: Group,
+        reach: float=None,
+        cue_icon_path: Path=None,
+        inventory: Inventory=None,
+        key_input: KeyInput=None,
+        interact_key: int=None
+    ): ...
 
 
 ### CONSTANTS & FLAG ###
@@ -28,6 +45,26 @@ DEFAULT_INTERACT_KEY: int = pygame.K_e
 
 
 ### CLASS DEFINITIONS ###
+
+class Interaction(Component):
+
+    ### FIELDS ###
+
+
+    ### CONSTRUCTORS ###
+
+    def __init__(self,
+        name: str
+    ):
+        Component.__init__(self, name)
+    
+    
+    def interact(self, interactor: Interactor) -> bool:
+        log(interactor)
+
+        return False
+
+
 
 class Interactor(Component):
 
@@ -55,10 +92,8 @@ class Interactor(Component):
         inventory: Inventory=None,
         key_input: KeyInput=None,
         interact_key: int=None
-    ) -> None:
+    ):
         Component.__init__(self, name)
-
-#        import pdb; pdb.set_trace()
 
         self.interact_group = interact_group
         self.icon_group = icon_group
@@ -89,10 +124,7 @@ class Interactor(Component):
     
     ### COMPONENT METHODS ###
 
-    def on_attach(self) -> None: super().on_attach()
-
-
-    def update(self, dt: float) -> None:
+    def update(self, dt: float):
         self.reach_check.rect.center = (self.being.pos.x, self.being.pos.y)
         collided_sprites = pygame.sprite.spritecollide(
             self.reach_check,
@@ -108,7 +140,7 @@ class Interactor(Component):
                 self.cue_icon.rect.bottom = item_being.rect.top
                 self.icon_group.add(self.cue_icon)
 
-        def interact_with(*item_beings: Optional['jadacore.being.ItemBeing']):
+        def interact_with(*item_beings: ItemBeing):
             for item_being in item_beings:
                 item_being.remove(item_being.groups())
                 self.inventory.add_item(item_being.item)
@@ -116,5 +148,3 @@ class Interactor(Component):
         if self.key_input.pull_key(self.interact_key):
             interact_with(*collided_sprites)
             
-
-    def on_detach(self) -> None: super().on_detach()

@@ -13,8 +13,9 @@ from pathlib import Path
 import pygame
 from pygame import Surface, Vector2
 
-from jadacore.being import Component
 from jadacore.meta import PIXEL_SIZE, RESOURCES_PATH
+
+from . import Component
 
 
 ### CONSTANTS & FLAGS ###

@@ -11,8 +11,9 @@
 
 from pygame import Vector2
 
-from jadacore.being import Component
 from jadacore.meta import PIXEL_SIZE
+
+from . import Component
 
 
 ### CONSTANTS & FLAGS ###

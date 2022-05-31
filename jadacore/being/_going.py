@@ -9,8 +9,7 @@
 
 ### IMPORTS ###
 
-from jadacore.comp import KeyDriver
-from . import Doing
+from . import KeyDriver, Doing
 
 
 ### CLASS DEFINITIONS ###
