@@ -106,10 +106,7 @@ class Player(Doing):
             interact_group,
             icon_group,
             reach,
-            cue_icon_path,
-            self.inventory,
-            self.key_input,
-            interact_key
+            self.key_input
         )
         self.attach(self.interactor)
 

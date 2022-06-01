@@ -11,20 +11,22 @@
 
 from pathlib import Path
 import pygame
-from pygame import Rect, Surface
+from pygame import Rect
 from pygame.sprite import Group, Sprite
 from jadacore.meta import PIXEL_SIZE
 import jadacore.util as util
 import jadacore.util.log as log
 
-from . import Component, Inventory, KeyInput, ItemBeing
+from . import Component, Doing, KeyInput
 
 
 ### CLASS STUBS ###
 
-class Interaction(Component):
+class InteractBeing(Doing):
     def __init__(self,
-        name: str
+        icon_prompt_path: Path=None,
+        interact_key: int=None,
+        **kwargs
     ): ...
 class Interactor(Component):
     def __init__(self,
@@ -32,11 +34,20 @@ class Interactor(Component):
         interact_group: Group,
         icon_group: Group,
         reach: float=None,
-        cue_icon_path: Path=None,
-        inventory: Inventory=None,
-        key_input: KeyInput=None,
+        key_input: KeyInput=None
+    ): ...
+class Interaction(Component):
+    icon_prompt: Sprite
+    interact_key: int
+    def __init__(self,
+        name: str,
+        icon_prompt_path: Path=None,
         interact_key: int=None
     ): ...
+    def interact(self,
+        interactor: Interactor
+    ) -> bool: ...
+
 
 
 ### CONSTANTS & FLAG ###
@@ -47,12 +58,39 @@ DEFAULT_INTERACT_KEY: int = pygame.K_e
 
 ### CLASS DEFINITIONS ###
 
+class InteractBeing(Doing):
+
+    ### FIELDS ###
+
+    interaction: Interaction = None
+
+
+    ### CONSTRUCTOR ###
+
+    def __init__(self,
+        icon_prompt_path: Path=None,
+        interact_key: int=None,
+        **kwargs
+    ):
+        Doing.__init__(self, **kwargs)
+
+        self.interaction = Interaction('interaction', icon_prompt_path, interact_key)
+        self.attach(self.interaction)
+    
+
+    def interact(self,
+        interactor: Interactor
+    ) -> bool:
+        return self.interaction.interact(interactor)
+
+
+
 class Interaction(Component):
 
     ### FIELDS ###
 
-    icon_prompt: Surface = None
-    interact_key: int    = None
+    icon_prompt: Sprite = None
+    interact_key: int   = None
 
 
     ### CONSTRUCTORS ###
@@ -64,16 +102,21 @@ class Interaction(Component):
     ):
         Component.__init__(self, name)
 
-        icon_prompt = util.load_pixel_image(icon_prompt_path)
+        icon_prompt_image = util.load_pixel_image(icon_prompt_path)
+        if icon_prompt_image:
+            self.icon_prompt = Sprite()
+            self.icon_prompt.image = icon_prompt_image
+            self.icon_prompt.rect  = icon_prompt_image.get_rect()
+
         self.interact_key = interact_key if interact_key else DEFAULT_INTERACT_KEY
     
     
     def interact(self,
         interactor: Interactor
     ) -> bool:
-        log(interactor)
+        log.sprint(interactor)
 
-        return False
+        return True
 
 
 
@@ -84,12 +127,8 @@ class Interactor(Component):
     interact_group: Group = None
     icon_group: Group     = None
     reach: float          = None
-    reach_sqrd: float     = None
     reach_check: Sprite   = None
-    cue_icon: Sprite      = None
-    inventory: Inventory  = None
     key_input: KeyInput   = None
-    interact_key: int     = None
 
     
     ### CONSTRUCTOR ###
@@ -99,10 +138,7 @@ class Interactor(Component):
         interact_group: Group,
         icon_group: Group,
         reach: float=None,
-        cue_icon_path: Path=None,
-        inventory: Inventory=None,
-        key_input: KeyInput=None,
-        interact_key: int=None
+        key_input: KeyInput=None
     ):
         Component.__init__(self, name)
 
@@ -110,7 +146,7 @@ class Interactor(Component):
         self.icon_group = icon_group
 
         self.reach = reach * PIXEL_SIZE if reach else DEFAULT_REACH * PIXEL_SIZE
-        self.reach_sqrd = self.reach * self.reach
+#        self.reach_sqrd = self.reach * self.reach
         self.reach_check = Sprite()
         self.reach_check.rect = Rect(
             (0.0, 0.0),
@@ -118,15 +154,14 @@ class Interactor(Component):
         )
         self.reach_check.radius = self.reach
 
-        if cue_icon_path:
-            self.cue_icon = Sprite()
-            self.cue_icon.image = util.load_pixel_image(cue_icon_path)
-            if self.cue_icon.image:
-                self.cue_icon.rect = self.cue_icon.image.get_rect()
+#        if cue_icon_path:
+#            self.cue_icon = Sprite()
+#            self.cue_icon.image = util.load_pixel_image(cue_icon_path)
+#            if self.cue_icon.image:
+#                self.cue_icon.rect = self.cue_icon.image.get_rect()
 
-        self.inventory = inventory
         self.key_input = key_input
-        self.interact_key = interact_key if interact_key else DEFAULT_INTERACT_KEY
+#        self.interact_key = interact_key if interact_key else DEFAULT_INTERACT_KEY
 
     
     ### COMPONENT METHODS ###
@@ -142,16 +177,19 @@ class Interactor(Component):
 
         self.icon_group.empty()
         if len(collided_sprites) > 0:
-            for item_being in collided_sprites:
-                self.cue_icon.rect.centerx = item_being.rect.centerx
-                self.cue_icon.rect.bottom = item_being.rect.top
-                self.icon_group.add(self.cue_icon)
+            for sprite in collided_sprites:
+                interact_being: InteractBeing = sprite
 
-        def interact_with(*item_beings: ItemBeing):
-            for item_being in item_beings:
-                item_being.remove(item_being.groups())
-                self.inventory.add_item(item_being.item)
+                if interact_being.interaction.icon_prompt:
+                    interact_being.interaction.icon_prompt.rect.centerx = interact_being.rect.centerx
+                    interact_being.interaction.icon_prompt.rect.bottom  = interact_being.rect.top
+                    self.icon_group.add(interact_being.interaction.icon_prompt)
 
-        if self.key_input.pull_key(self.interact_key):
-            interact_with(*collided_sprites)
+                if self.key_input.pull_key(interact_being.interaction.interact_key):
+                    s: bool = interact_being.interact(self)
+                    log.sprint(f"Interaction success: {s}")
+
+                    #TODO: Handle in Inventory (maybe make Inventory a child of Interactor)
+#                    interact_being.remove(interact_being.groups())
+#                    self.inventory.add_item(interact_being.item)
             

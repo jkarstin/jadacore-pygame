@@ -9,7 +9,7 @@ from ._doing    import Doing
 # Extended children
 from ._input    import KeyInput
 from ._driver   import Driver, KeyDriver, Seeker
-from ._item     import Item, Inventory, ItemBeing
-from ._interact import Interaction, Interactor
+from ._interact import InteractBeing, Interaction, Interactor
+from ._item     import ItemBeing, Item, Inventory
 from ._going    import Going
 from ._seeking  import Seeking
