@@ -3,7 +3,7 @@
 #================================#
 #                                #
 #--------------------------------#
-# J Karstin Neill     05.31.2022 #
+# J Karstin Neill     06.01.2022 #
 ##################################
 
 
@@ -13,7 +13,8 @@ from pathlib import Path
 import pygame
 from pygame import Rect, Surface
 from pygame.sprite import Group, Sprite
-from jadacore.meta import RESOURCES_PATH, PIXEL_SIZE
+from jadacore.meta import PIXEL_SIZE
+import jadacore.util as util
 import jadacore.util.log as log
 
 from . import Component, Inventory, KeyInput, ItemBeing
@@ -50,16 +51,26 @@ class Interaction(Component):
 
     ### FIELDS ###
 
+    icon_prompt: Surface = None
+    interact_key: int    = None
+
 
     ### CONSTRUCTORS ###
 
     def __init__(self,
-        name: str
+        name: str,
+        icon_prompt_path: Path=None,
+        interact_key: int=None
     ):
         Component.__init__(self, name)
+
+        icon_prompt = util.load_pixel_image(icon_prompt_path)
+        self.interact_key = interact_key if interact_key else DEFAULT_INTERACT_KEY
     
     
-    def interact(self, interactor: Interactor) -> bool:
+    def interact(self,
+        interactor: Interactor
+    ) -> bool:
         log(interactor)
 
         return False
@@ -109,12 +120,8 @@ class Interactor(Component):
 
         if cue_icon_path:
             self.cue_icon = Sprite()
-            cue_icon_image_raw: Surface = pygame.image.load(RESOURCES_PATH/cue_icon_path)
-            if cue_icon_image_raw:
-                self.cue_icon.image = pygame.transform.scale(
-                    cue_icon_image_raw.convert_alpha(),
-                    (cue_icon_image_raw.get_width() * PIXEL_SIZE, cue_icon_image_raw.get_height() * PIXEL_SIZE)
-                )
+            self.cue_icon.image = util.load_pixel_image(cue_icon_path)
+            if self.cue_icon.image:
                 self.cue_icon.rect = self.cue_icon.image.get_rect()
 
         self.inventory = inventory

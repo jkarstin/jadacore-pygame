@@ -3,17 +3,16 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.31.2022 #
+# J Karstin Neill    06.01.2022 #
 #################################
 
 
 ### IMPORTS ###
 
 from pathlib import Path
-import pygame
 from pygame import Surface, Vector2
 
-from jadacore.meta import PIXEL_SIZE, RESOURCES_PATH
+import jadacore.util as util
 
 from . import Component
 
@@ -73,14 +72,7 @@ class Animation(Component):
         Component.__init__(self, name)
 
         # read in constructor arguments
-        sprite_sheet_raw: Surface = pygame.image.load(RESOURCES_PATH/sprite_sheet_path)
-        self.sprite_sheet = pygame.transform.scale(
-            sprite_sheet_raw.convert_alpha(),
-            [
-                sprite_sheet_raw.get_width()  * PIXEL_SIZE,
-                sprite_sheet_raw.get_height() * PIXEL_SIZE
-            ]
-        )
+        self.sprite_sheet = util.load_pixel_image(sprite_sheet_path)
         self.sprite_sheet_dims = sprite_sheet_dims if sprite_sheet_dims else DEFAULT_SPRITE_SHEET_DIMS
 
         if frames_per_second and frames_per_second > 0.0:
