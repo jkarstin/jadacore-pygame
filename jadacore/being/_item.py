@@ -3,39 +3,40 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.31.2022 #
+# J Karstin Neill    06.01.2022 #
 #################################
 
 
 ### IMPORTS ###
 
 from pathlib import Path
-from pygame import Surface
 import re
 
-from . import Component, Doing
+import jadacore.util.log as log
+
+from . import InteractBeing, Interaction, Interactor
 
 
 ### CLASS STUBS ###
 
-class ItemBeing(Doing):
+class ItemBeing(InteractBeing):
     def __init__(self,
         sprite_sheet_path: Path,
         name: str,        
         space: float=None,
-        icon_path: Path=None,
         **kwargs
     ): ...
-class Item(Component):
+class Item(Interaction):
     def __init__(self,
         name: str,
         space: float=None,
-        icon_path: Path=None
+        **kwargs
     ): ...
-class Inventory(Component):
+class Inventory(Interactor):
     def __init__(self,
         name: str,
-        space_max: float=None
+        space_max: float=None,
+        **kwargs
     ): ...
 
 
@@ -50,7 +51,7 @@ DEFAULT_SPACE_MAX: float = 50.0
 
 ### CLASS DEFINITIONS ###
 
-class ItemBeing(Doing):
+class ItemBeing(InteractBeing):
 
     ### FIELDS ###
 
@@ -64,16 +65,34 @@ class ItemBeing(Doing):
         name: str,        
         space: float=None,
         icon_path: Path=None,
+        interact_key: int=None,
         **kwargs
     ):
-        Doing.__init__(self, sprite_sheet_path, **kwargs)
+        InteractBeing.__init__(self, sprite_sheet_path, **kwargs)
 
-        self.item = Item(name, space, icon_path)
+        self.item = Item(name, space, icon_path=icon_path, interact_key=interact_key)
+        self.interaction = self.item
         self.attach(self.item)
+    
+
+    def interact(self,
+        interactor: Interactor
+    ) -> bool:
+        if interactor:
+            log.sprint(f"ItemBeing '{self.item.name}' interacted with by: {interactor}")
+
+            if isinstance(interactor, Inventory):
+                inventory: Inventory = interactor
+                self.remove(self.groups())
+                inventory.add_item(self.item)
+
+            return True
+
+        return False
 
 
 
-class Item(Component):
+class Item(Interaction):
     """
     Description:
     ------------
@@ -88,7 +107,6 @@ class Item(Component):
     ### FIELDS ###
 
     space: float  = None
-    icon: Surface = None
 
 
     ### CONSTRUCTOR ###
@@ -96,7 +114,7 @@ class Item(Component):
     def __init__(self,
         name: str,
         space: float=None,
-        icon_path: Path=None
+        **kwargs
     ):
         """
         Usage:
@@ -118,32 +136,13 @@ class Item(Component):
         --------
         - <Item> - Instance of Item class.
         """
-        Component.__init__(self, name)
+        Interaction.__init__(self, name, **kwargs)
 
         self.space = space if space else DEFAULT_SPACE
-        
-        if icon_path:
-            pass
-        else:
-            self.icon = Surface()
-
-
-    ### COMPONENT METHODS ###
-
-    def on_attach(self) -> None:
-        super().on_attach()
-    
-
-    def update(self, dt: float) -> None:
-        super().update(dt)
-
-
-    def on_detach(self) -> None:
-        super().on_detach()
 
 
 
-class Inventory(Component):
+class Inventory(Interactor):
     """
     Description:
     ------------
@@ -165,7 +164,8 @@ class Inventory(Component):
 
     def __init__(self,
         name: str,
-        space_max: float=None
+        space_max: float=None,
+        **kwargs
     ):
         """
         Usage:
@@ -185,25 +185,11 @@ class Inventory(Component):
         --------
         - <Inventory> - Instance of Inventory class.
         """
-        Component.__init__(self, name)
+        Interactor.__init__(self, name, **kwargs)
 
         self.items = {}
         self.space_used = 0.0
         self.space_max = space_max if space_max else DEFAULT_SPACE_MAX
-
-
-    ### COMPONENT METHODS ###
-
-    def on_attach(self) -> None:
-        super().on_attach()
-    
-
-    def update(self, dt: float) -> None:
-        super().update(dt)
-
-
-    def on_detach(self) -> None:
-        super().on_detach()
 
     
     ### OPERATIONAL METHODS ###

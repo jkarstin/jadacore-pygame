@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.31.2022 #
+# J Karstin Neill    06.01.2022 #
 #################################
 
 
@@ -14,7 +14,7 @@ from pygame import Vector2
 from pygame.sprite import Group
 
 from jadacore.being import (
-    KeyInput, Driver, KeyDriver, Seeker, Item, Inventory, Interactor,
+    KeyInput, Driver, KeyDriver, Seeker, Item, Inventory,
     Doing, ItemBeing
 )
 
@@ -41,7 +41,6 @@ class Player(Doing):
 
     inventory: Inventory   = None
     key_input: KeyInput    = None
-    interactor: Interactor = None
     driver: Driver         = None
 
 
@@ -53,8 +52,6 @@ class Player(Doing):
         sprite_sheet_path: Path,
         driver: Driver=None,
         reach: float=None,
-        cue_icon_path: Path=None,
-        interact_key: int=None,
         **kwargs
     ) -> None:
         """
@@ -95,20 +92,17 @@ class Player(Doing):
             **kwargs
         )
 
-        self.inventory = Inventory('inventory')
-        self.attach(self.inventory)
-
         self.key_input = KeyInput('key_input')
         self.attach(self.key_input)
 
-        self.interactor = Interactor(
-            'interactor',
-            interact_group,
-            icon_group,
-            reach,
-            self.key_input
+        self.inventory = Inventory(
+            'inventory',
+            interact_group=interact_group,
+            icon_group=icon_group,
+            reach=reach,
+            key_input=self.key_input
         )
-        self.attach(self.interactor)
+        self.attach(self.inventory)
 
         if driver:
             self.driver = driver

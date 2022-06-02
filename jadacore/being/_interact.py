@@ -24,7 +24,7 @@ from . import Component, Doing, KeyInput
 
 class InteractBeing(Doing):
     def __init__(self,
-        icon_prompt_path: Path=None,
+        icon_path: Path=None,
         interact_key: int=None,
         **kwargs
     ): ...
@@ -41,7 +41,7 @@ class Interaction(Component):
     interact_key: int
     def __init__(self,
         name: str,
-        icon_prompt_path: Path=None,
+        icon_path: Path=None,
         interact_key: int=None
     ): ...
     def interact(self,
@@ -68,13 +68,14 @@ class InteractBeing(Doing):
     ### CONSTRUCTOR ###
 
     def __init__(self,
-        icon_prompt_path: Path=None,
+        sprite_sheet_path: Path,
+        icon_path: Path=None,
         interact_key: int=None,
         **kwargs
     ):
-        Doing.__init__(self, **kwargs)
+        Doing.__init__(self, sprite_sheet_path, **kwargs)
 
-        self.interaction = Interaction('interaction', icon_prompt_path, interact_key)
+        self.interaction = Interaction('interaction', icon_path, interact_key)
         self.attach(self.interaction)
     
 
@@ -97,16 +98,16 @@ class Interaction(Component):
 
     def __init__(self,
         name: str,
-        icon_prompt_path: Path=None,
+        icon_path: Path=None,
         interact_key: int=None
     ):
         Component.__init__(self, name)
 
-        icon_prompt_image = util.load_pixel_image(icon_prompt_path)
-        if icon_prompt_image:
+        icon_image = util.load_pixel_image(icon_path)
+        if icon_image:
             self.icon_prompt = Sprite()
-            self.icon_prompt.image = icon_prompt_image
-            self.icon_prompt.rect  = icon_prompt_image.get_rect()
+            self.icon_prompt.image = icon_image
+            self.icon_prompt.rect  = icon_image.get_rect()
 
         self.interact_key = interact_key if interact_key else DEFAULT_INTERACT_KEY
     
@@ -146,7 +147,6 @@ class Interactor(Component):
         self.icon_group = icon_group
 
         self.reach = reach * PIXEL_SIZE if reach else DEFAULT_REACH * PIXEL_SIZE
-#        self.reach_sqrd = self.reach * self.reach
         self.reach_check = Sprite()
         self.reach_check.rect = Rect(
             (0.0, 0.0),
@@ -154,14 +154,7 @@ class Interactor(Component):
         )
         self.reach_check.radius = self.reach
 
-#        if cue_icon_path:
-#            self.cue_icon = Sprite()
-#            self.cue_icon.image = util.load_pixel_image(cue_icon_path)
-#            if self.cue_icon.image:
-#                self.cue_icon.rect = self.cue_icon.image.get_rect()
-
         self.key_input = key_input
-#        self.interact_key = interact_key if interact_key else DEFAULT_INTERACT_KEY
 
     
     ### COMPONENT METHODS ###
@@ -186,10 +179,5 @@ class Interactor(Component):
                     self.icon_group.add(interact_being.interaction.icon_prompt)
 
                 if self.key_input.pull_key(interact_being.interaction.interact_key):
-                    s: bool = interact_being.interact(self)
-                    log.sprint(f"Interaction success: {s}")
-
-                    #TODO: Handle in Inventory (maybe make Inventory a child of Interactor)
-#                    interact_being.remove(interact_being.groups())
-#                    self.inventory.add_item(interact_being.item)
+                    interact_being.interact(self)
             
