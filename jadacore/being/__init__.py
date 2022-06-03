@@ -9,9 +9,11 @@ from ._doing import (
 )
 
 # Going classes
-from ._input    import Input, KeyInput, MouseInput
-from ._driver   import Driver, KeyDriver, Seeker, ClickSeeker
-from ._going    import Going, Seeking
+from ._input import Input, KeyInput, MouseInput
+from ._going import (
+    Going, Seeking,
+    Driver, KeyDriver, Seeker, ClickSeeker
+)
 
 # Interacting classes
 from ._interact import (

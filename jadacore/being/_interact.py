@@ -13,6 +13,7 @@ from pathlib import Path
 import pygame
 from pygame import Rect
 from pygame.sprite import Group, Sprite
+
 from jadacore.meta import PIXEL_SIZE
 import jadacore.util as util
 

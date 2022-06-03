@@ -22,10 +22,6 @@ from jadacore.util import ERROR_UNNAMED_COMPONENT
 
 ### CLASS STUBS ###
 
-class Component:
-    def __init__(self,
-        name: str
-    ): ...
 class Being(Sprite):
     def __init__(self,
         pos: Vector2=None,
@@ -33,6 +29,10 @@ class Being(Sprite):
         color: Color=None,
         image_path: Path=None,
         groups: list[Group]=None
+    ): ...
+class Component:
+    def __init__(self,
+        name: str
     ): ...
 
 class Being(Sprite):

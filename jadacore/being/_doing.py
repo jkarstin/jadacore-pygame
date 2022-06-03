@@ -607,7 +607,7 @@ class StepMotor(Motor):
 
     ### FEILDS ###
 
-    step_size:       int = None
+    step_size: int       = None
     min_step_time: float = None
 
 
