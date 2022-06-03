@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.01.2022 #
+# J Karstin Neill    06.02.2022 #
 #################################
 
 
@@ -15,6 +15,67 @@ from pygame import Surface, Vector2
 import jadacore.util as util
 
 from . import Component
+
+
+### CLASS STUBS ###
+
+class Animation(Component):
+    ANIM_STYLE_LOOP: int
+    ANIM_STYLE_ONCE: int
+    ANIM_STYLE_BOUNCE: int
+    ANIM_STATE_STOPPED: int
+    ANIM_STATE_RUNNING: int
+    ANIM_STATE_PAUSED:  int
+    sprite_sheet: Surface
+    sprite_sheet_dims: Vector2
+    frames: list[Surface]
+    frame_size: Vector2
+    current_frame: Surface
+    current_frame_index: int
+    current_frame_time: float
+    frame_seconds: float
+    animation_style: int
+    animation_state: int
+    animation_time: float
+    def __init__(self,
+        name: str,
+        sprite_sheet_path: Path,
+        sprite_sheet_dims: Vector2=None,
+        frames_per_second: float=None,
+        animation_style: int=None
+    ): ...
+    def on_attach(self): ...
+    def update(self, dt: float): ...
+    def start(self) -> tuple[int, float, float, int, int]: ...
+    def pause(self) -> tuple[int, float, float, int, int]: ...
+    def stop(self) -> tuple[int, float, float, int, int]: ...
+    def get_frame(self, i: int=None) -> Surface: ...
+class Animator(Component):
+    animations: dict[str, Animation]
+    current_animation: Animation
+    current_anim_name: str
+    def __init__(self,
+        name: str,
+        sprite_sheet_path: Path,
+        sprite_sheet_dims: Vector2=None,
+        frames_per_second: float=None,
+        animation_style: int=None,
+        default_anim_name: str=None
+    ): ...
+    def on_attach(self): ...
+    def update(self, dt: float): ...
+    def on_detach(self): ...
+    def start(self): ...
+    def pause(self): ...
+    def stop(self): ...
+    def add_animation(self,
+        anim_name: str,
+        sprite_sheet_path: Path,
+        sprite_sheet_dims: Vector2=None,
+        frames_per_second: float=None,
+        animation_style: int=None
+    ) -> Animation: ...
+    def set_animation(self, anim_name: str) -> Animation: ...
 
 
 ### CONSTANTS & FLAGS ###
@@ -68,7 +129,7 @@ class Animation(Component):
         sprite_sheet_dims: Vector2=None,
         frames_per_second: float=None,
         animation_style: int=None
-    ) -> None:
+    ):
         Component.__init__(self, name)
 
         # read in constructor arguments
@@ -116,14 +177,14 @@ class Animation(Component):
 
     ### COMPONENT METHODS ###
 
-    def on_attach(self) -> None: 
+    def on_attach(self): 
         if self.being:
             self.being.image = self.get_frame()
             self.being.rect.w = self.frame_size.x
             self.being.rect.h = self.frame_size.y
 
 
-    def update(self, dt: float) -> None:
+    def update(self, dt: float):
         if self.being:
             if self.animation_state == Animation.ANIM_STATE_RUNNING and self.frame_seconds:
                 self.animation_time += dt
@@ -144,9 +205,6 @@ class Animation(Component):
             
             self.current_frame = self.frames[self.current_frame_index]            
             self.being.image = self.current_frame
-
-
-    def on_detach(self) -> None: pass
 
 
     ### OPERATIONAL METHODS ###
@@ -249,33 +307,33 @@ class Animator(Component):
 
     ### COMPONENT METHODS ###
 
-    def on_attach(self) -> None:
+    def on_attach(self):
         if self.being:
             self.being.attach(self.current_animation)
 
 
-    def update(self, dt: float) -> None:
+    def update(self, dt: float):
         self.current_animation = self.animations[self.current_anim_name]
         if self.being:
             self.being.attach(self.current_animation)
 
 
-    def on_detach(self) -> None: 
+    def on_detach(self): 
         if self.being:
             self.being.detach(self.current_animation)
 
 
     ### OPERATIONAL METHODS ###
 
-    def start(self) -> None:
+    def start(self):
         self.current_animation.start()
 
 
-    def pause(self) -> None:
+    def pause(self):
         self.current_animation.pause()
 
 
-    def stop(self) -> None:
+    def stop(self):
         self.current_animation.stop()
 
 
