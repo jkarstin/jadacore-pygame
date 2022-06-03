@@ -22,9 +22,13 @@
     - jadacore.being.**ClickSeeker**
     - jadacore.being.**Going**
     - jadacore.being.**Seeking**
-    - jadacore.being.**InteractBeing**
+    - jadacore.being.**Interactable**
     - jadacore.being.**Interaction**
+    - jadacore.being.**KeyInteraction**
+    - jadacore.being.**ClickInteraction**
     - jadacore.being.**Interactor**
+    - jadacore.being.**KeyInteractor**
+    - jadacore.being.**ClickInteractor**
     - jadacore.being.**ItemBeing**
     - jadacore.being.**Item**
     - jadacore.being.**Inventory**
