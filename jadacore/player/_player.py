@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.02.2022 #
+# J Karstin Neill    06.03.2022 #
 #################################
 
 
@@ -14,14 +14,48 @@ from pygame import Vector2
 from pygame.sprite import Group
 
 from jadacore.being import (
+    Doing,
     KeyInput, MouseInput,
     Driver, KeyDriver, Seeker, ClickSeeker,
-    Item, Inventory,
-    Doing, ItemBeing
+    ItemBeing, Item, Inventory,
 )
 
 
 ### CLASS STUB ###
+
+class Player(Doing):
+    def __init__(self,
+        interact_group: Group,
+        icon_group: Group,
+        sprite_sheet_path: Path,
+        driver: Driver=None,
+        reach: float=None,
+        **kwargs
+    ): ...
+class KeyPlayer(Player):
+    def __init__(self,
+        interact_group: Group,
+        icon_group: Group,
+        sprite_sheet_path: Path,
+        move_speed: float=None,
+        **kwargs
+    ): ...
+class SeekPlayer(Player):
+    def __init__(self,
+        interact_group: Group,
+        icon_group: Group,
+        sprite_sheet_path: Path,
+        move_speed: float=None,
+        **kwargs
+    ): ...
+class ClickPlayer(SeekPlayer):
+    def __init__(self,
+        interact_group: Group,
+        icon_group: Group,
+        sprite_sheet_path: Path,
+        move_speed: float=None,
+        **kwargs
+    ): ...
 
 class Player(Doing):
     inventory: Inventory
@@ -144,9 +178,9 @@ class Player(Doing):
         self.key_input = KeyInput('key_input')
         self.attach(self.key_input)
 
-        self.inventory = Inventory(
-            'inventory',
-            interact_group=interact_group, icon_group=icon_group, reach=reach, key_input=self.key_input
+        self.inventory = Inventory('inventory',
+            interact_group, icon_group,
+            reach=reach, key_input=self.key_input
         )
         self.attach(self.inventory)
 

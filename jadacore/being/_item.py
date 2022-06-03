@@ -3,41 +3,86 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.01.2022 #
+# J Karstin Neill    06.03.2022 #
 #################################
 
 
 ### IMPORTS ###
 
 from pathlib import Path
+from pygame.sprite import Group
 import re
 
 import jadacore.util.log as log
 
-from . import InteractBeing, Interaction, Interactor
+from . import (
+    Interacting,
+    KeyInteraction,
+    Interactor, KeyInteractor
+)
 
 
 ### CLASS STUBS ###
 
-class ItemBeing(InteractBeing):
+class ItemBeing(Interacting):
     def __init__(self,
         sprite_sheet_path: Path,
         name: str,        
         space: float=None,
+        icon_path: Path=None,
+        interact_key: int=None,
         **kwargs
     ): ...
-class Item(Interaction):
+class Item(KeyInteraction):
     def __init__(self,
         name: str,
         space: float=None,
         **kwargs
     ): ...
-class Inventory(Interactor):
+class Inventory(KeyInteractor):
     def __init__(self,
         name: str,
+        interact_group: Group,
+        icon_group: Group,
         space_max: float=None,
         **kwargs
     ): ...
+
+class ItemBeing(Interacting):
+    item: Item
+    def __init__(self,
+        sprite_sheet_path: Path,
+        name: str,        
+        space: float=None,
+        icon_path: Path=None,
+        interact_key: int=None,
+        **kwargs
+    ): ...
+    def interact(self, interactor: Interactor): ...
+class Item(KeyInteraction):
+    space: float
+    def __init__(self,
+        name: str,
+        space: float=None,
+        **kwargs
+    ): ...
+class Inventory(KeyInteractor):
+    items: dict[str, list[Item]]
+    space_used: float
+    space_max: float
+    def __init__(self,
+        name: str,
+        interact_group: Group,
+        icon_group: Group,
+        space_max: float=None,
+        **kwargs
+    ): ...
+    def add_item(self, item: Item=None) -> float: ...
+    def has_item(self, name: str=None) -> bool: ...
+    def how_many(self, name: str=None) -> int: ...
+    def space_free(self) -> float: ...
+    def remove_item(self, name: str=None) -> tuple[Item, float]: ...
+    def dump_out(self, name_pattern: str=None) -> tuple[dict[str, list[Item]], float]:...
 
 
 ### CONSTANTS & FLAGS ###
@@ -51,7 +96,7 @@ DEFAULT_SPACE_MAX: float = 50.0
 
 ### CLASS DEFINITIONS ###
 
-class ItemBeing(InteractBeing):
+class ItemBeing(Interacting):
 
     ### FIELDS ###
 
@@ -68,31 +113,29 @@ class ItemBeing(InteractBeing):
         interact_key: int=None,
         **kwargs
     ):
-        InteractBeing.__init__(self, sprite_sheet_path, **kwargs)
+        Interacting.__init__(self, sprite_sheet_path, **kwargs)
 
-        self.item = Item(name, space, icon_path=icon_path, interact_key=interact_key)
+        self.item = Item(
+            name, space,
+            icon_path=icon_path, interact_key=interact_key
+        )
         self.interaction = self.item
         self.attach(self.item)
     
 
-    def interact(self,
-        interactor: Interactor
-    ) -> bool:
+    ### WRAPPER METHODS ###
+
+    def interact(self, interactor: Inventory):
         if interactor:
-            log.sprint(f"ItemBeing '{self.item.name}' interacted with by: {interactor}")
+            log.sprint(f"ItemBeing {self} with Item {self.item} interacted with by: {interactor}")
 
             if isinstance(interactor, Inventory):
                 inventory: Inventory = interactor
                 self.remove(self.groups())
                 inventory.add_item(self.item)
 
-            return True
 
-        return False
-
-
-
-class Item(Interaction):
+class Item(KeyInteraction):
     """
     Description:
     ------------
@@ -136,13 +179,13 @@ class Item(Interaction):
         --------
         - <Item> - Instance of Item class.
         """
-        Interaction.__init__(self, name, **kwargs)
+        KeyInteraction.__init__(self, name, **kwargs)
 
         self.space = space if space else DEFAULT_SPACE
 
 
 
-class Inventory(Interactor):
+class Inventory(KeyInteractor):
     """
     Description:
     ------------
@@ -164,6 +207,8 @@ class Inventory(Interactor):
 
     def __init__(self,
         name: str,
+        interact_group: Group,
+        icon_group: Group,
         space_max: float=None,
         **kwargs
     ):
@@ -185,13 +230,16 @@ class Inventory(Interactor):
         --------
         - <Inventory> - Instance of Inventory class.
         """
-        Interactor.__init__(self, name, **kwargs)
+        KeyInteractor.__init__(self,
+            name, interact_group, icon_group,
+            **kwargs
+        )
 
         self.items = {}
         self.space_used = 0.0
         self.space_max = space_max if space_max else DEFAULT_SPACE_MAX
 
-    
+
     ### OPERATIONAL METHODS ###
 
     def add_item(self, item: Item=None) -> float:
@@ -222,11 +270,11 @@ class Inventory(Interactor):
         return self.space_used
 
     
-    def has_item(self, item_name: str=None) -> bool:
+    def has_item(self, name: str=None) -> bool:
         """
         Usage:
         ------
-        <Inventory>.has_item(item_name: str=None) -> bool
+        <Inventory>.has_item(name: str=None) -> bool
 
         Description:
         ------------
@@ -234,21 +282,21 @@ class Inventory(Interactor):
 
         Arguments:
         ----------
-        - item_name: str=None - Name of Item to find.
+        - name: str=None - Name of Item to find.
 
         Returns:
         --------
         - has_item: bool - True if Item with name is in Inventory; False if no Item with given name was found.
         
         """
-        return item_name and item_name in self.items
+        return name and name in self.items
 
     
-    def how_many(self, item_name: str=None) -> int:
+    def how_many(self, name: str=None) -> int:
         """
         Usage:
         ------
-        <Inventory>.how_many(item_name: str=None) -> int
+        <Inventory>.how_many(name: str=None) -> int
 
         Description:
         ------------
@@ -256,14 +304,14 @@ class Inventory(Interactor):
 
         Arguments:
         ----------
-        - item_name: str=None - Name of Item to search for in Inventory.
+        - name: str=None - Name of Item to search for in Inventory.
 
         Returns:
         --------
         - count: int - Integer count of Items associated with given name; will be 0 [zero] if no Items found.
         """
-        if self.has_item(item_name):
-            return len(self.items[item_name])
+        if self.has_item(name):
+            return len(self.items[name])
 
         return 0
 
@@ -290,11 +338,11 @@ class Inventory(Interactor):
         return self.space_max - self.space_used
 
     
-    def remove_item(self, item_name: str=None) -> tuple[Item, float]:
+    def remove_item(self, name: str=None) -> tuple[Item, float]:
         """
         Usage:
         ------
-        <Inventory>.remove_item(item_name: str=None) -> (Item|None, float)
+        <Inventory>.remove_item(name: str=None) -> (Item|None, float)
 
         Description:
         ------------
@@ -302,7 +350,7 @@ class Inventory(Interactor):
 
         Arguments:
         ----------
-        - item_name: str=None - Name of the Item that should be removed.
+        - name: str=None - Name of the Item that should be removed.
 
         Returns:
         --------
@@ -313,22 +361,22 @@ class Inventory(Interactor):
         """
         removed_item: Item = None
 
-        if self.has_item(item_name):
-            items_list = self.items.pop(item_name)
+        if self.has_item(name):
+            items_list = self.items.pop(name)
             removed_item = items_list.pop(-1)
             self.space_used -= removed_item.space
 
             if len(items_list) > 0:
-                self.items[item_name] = items_list
+                self.items[name] = items_list
 
         return removed_item, self.space_used
 
     
-    def dump_out(self, item_name_pattern: str=None) -> tuple[dict[str, list[Item]], float]:
+    def dump_out(self, name_pattern: str=None) -> tuple[dict[str, list[Item]], float]:
         """
         Usage:
         ------
-        <Inventory>.dump_out(item_name_pattern: str=None) -> ({str: [Item, ...], ...}|None, float)
+        <Inventory>.dump_out(name_pattern: str=None) -> ({str: [Item, ...], ...}|None, float)
 
         Description:
         ------------
@@ -338,7 +386,7 @@ class Inventory(Interactor):
 
         Arguments:
         ----------
-        - item_name_pattern: str=None - Regex pattern to match against Item names in a search;
+        - name_pattern: str=None - Regex pattern to match against Item names in a search;
         Leave empty or as None to match all Items.
 
         Returns:
@@ -350,7 +398,7 @@ class Inventory(Interactor):
         """
         dump_items: dict[str, list[Item]] = None
 
-        if not item_name_pattern:
+        if not name_pattern:
             dump_items: dict[str, list[Item]] = self.items
 
             self.items = {}
@@ -359,7 +407,7 @@ class Inventory(Interactor):
             dump_items = {}
 
             for item_name in self.items:
-                if re.search(item_name_pattern, item_name):
+                if re.search(name_pattern, item_name):
                     dump_items[item_name] = self.items[item_name]
 
                     while True:

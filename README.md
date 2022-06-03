@@ -11,6 +11,7 @@
     - jadacore.being.**Animation**
     - jadacore.being.**Animator**
     - jadacore.being.**Motor**
+    - jadacore.being.**StepMotor**
     - jadacore.being.**Doing**
     - jadacore.being.**Input**
     - jadacore.being.**KeyInput**
@@ -46,6 +47,11 @@
   - jadacore.util
     - jadacore.util.*pox*
     - jadacore.util.*load_pixel_image*
+    - jadacore.util.*error*
+    - jadacore.util.*sprint*
+    - jadacore.util.<ins>EXIT_SUCCESS</ins>,
+    - jadacore.util.<ins>ERROR_GENERIC</ins>,
+    - jadacore.util.<ins>ERROR_UNNAMED_COMPONENT</ins>
     - jadacore.util.log
       - jadacore.util.log.*error*
       - jadacore.util.log.*sprint*

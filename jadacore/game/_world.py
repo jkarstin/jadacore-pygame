@@ -12,7 +12,7 @@
 from pygame import Surface
 from pygame.sprite import Group
 
-from jadacore.being import Being, InteractBeing
+from jadacore.being import Being, Interacting
 from jadacore.meta import WINDOW_SIZE
 
 
@@ -68,6 +68,6 @@ class World:
 
     def add(self, *beings: Being) -> None:
         for being in beings:
-            if isinstance(being, InteractBeing):
+            if isinstance(being, Interacting):
                 self.interact_group.add(being)
             self.world_group.add(*beings)

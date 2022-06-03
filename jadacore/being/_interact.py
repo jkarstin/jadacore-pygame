@@ -3,7 +3,7 @@
 #================================#
 #                                #
 #--------------------------------#
-# J Karstin Neill     06.01.2022 #
+# J Karstin Neill     06.03.2022 #
 ##################################
 
 
@@ -15,50 +15,146 @@ from pygame import Rect
 from pygame.sprite import Group, Sprite
 from jadacore.meta import PIXEL_SIZE
 import jadacore.util as util
-import jadacore.util.log as log
 
-from . import Component, Doing, KeyInput
+from . import Component, Doing, Input, KeyInput, MouseInput
 
 
 ### CLASS STUBS ###
 
-class InteractBeing(Doing):
+class Interacting(Doing):
     def __init__(self,
+        sprite_sheet_path: Path,
         icon_path: Path=None,
         interact_key: int=None,
         **kwargs
     ): ...
+class Interaction(Component):
+    def __init__(self,
+        name: str,
+        icon_path: Path=None,
+        interact_i: int=None
+    ): ...
+class KeyInteraction(Interaction):
+    def __init__(self,
+        name: str,
+        interact_key: int=None,
+        **kwargs
+    ): ...
+class ClickInteraction(Interaction):
+    def __init__(self,
+        name: str,
+        interact_btn: int=None,
+        **kwargs
+    ):...
 class Interactor(Component):
     def __init__(self,
         name: str,
         interact_group: Group,
         icon_group: Group,
         reach: float=None,
-        key_input: KeyInput=None
+        input: Input=None
     ): ...
+class KeyInteractor(Interactor):
+    def __init__(self,
+        name: str,
+        interact_group: Group,
+        icon_group: Group,
+        key_input: KeyInput=None,
+        **kwargs
+    ): ...
+class ClickInteractor(Interactor):
+    def __init__(self,
+        name: str,
+        interact_group: Group,
+        icon_group: Group,
+        mouse_input: MouseInput=None,
+        **kwargs
+    ): ...
+
+class Interacting(Doing):
+    interaction: Interaction
+    def __init__(self,
+        sprite_sheet_path: Path,
+        icon_path: Path=None,
+        interact_key: int=None,
+        **kwargs
+    ): ...
+    def interact(self, interactor: Interactor): ...
 class Interaction(Component):
     icon_prompt: Sprite
-    interact_key: int
+    interact_i: int
     def __init__(self,
         name: str,
         icon_path: Path=None,
-        interact_key: int=None
+        interact_i: int=None
     ): ...
-    def interact(self,
-        interactor: Interactor
-    ) -> bool: ...
-
+    def interact(self, interactor: Interactor): ...
+class KeyInteraction(Interaction):
+    interact_key: int
+    def __init__(self,
+        name: str,
+        interact_key: int=None,
+        **kwargs
+    ): ...
+class ClickInteraction(Interaction):
+    interact_btn: int
+    def __init__(self,
+        name: str,
+        interact_btn: int=None,
+        **kwargs
+    ):...
+class Interactor(Component):
+    interact_group: Group
+    icon_group: Group
+    reach: float
+    reach_check: Sprite
+    input: Input
+    def __init__(self,
+        name: str,
+        interact_group: Group,
+        icon_group: Group,
+        reach: float=None,
+        input: Input=None
+    ): ...
+    def interaction_trigger(self, interaction: Interaction) -> bool: ...
+    def update(self, dt: float): ...
+class KeyInteractor(Interactor):
+    key_input: KeyInput
+    def __init__(self,
+        name: str,
+        interact_group: Group,
+        icon_group: Group,
+        key_input: KeyInput=None,
+        **kwargs
+    ): ...
+    def interaction_trigger(self, key_interaction: KeyInteraction) -> bool: ...
+class ClickInteractor(Interactor):
+    mouse_input: MouseInput
+    def __init__(self,
+        name: str,
+        interact_group: Group,
+        icon_group: Group,
+        mouse_input: MouseInput=None,
+        **kwargs
+    ): ...
+    def interaction_trigger(self, click_interaction: ClickInteraction) -> bool: ...
 
 
 ### CONSTANTS & FLAG ###
 
-DEFAULT_REACH: float      = 20
+# ::KeyInteraction
 DEFAULT_INTERACT_KEY: int = pygame.K_e
+
+# ::ClickInteraction
+DEFAULT_INTERACT_BTN: int = pygame.BUTTON_LEFT
+
+# ::Interactor
+DEFAULT_REACH: float = 20
 
 
 ### CLASS DEFINITIONS ###
 
-class InteractBeing(Doing):
+class Interacting(Doing):
 
     ### FIELDS ###
 
@@ -79,10 +175,10 @@ class InteractBeing(Doing):
         self.attach(self.interaction)
     
 
-    def interact(self,
-        interactor: Interactor
-    ) -> bool:
-        return self.interaction.interact(interactor)
+    ### WRAPPER METHODS ###
+
+    def interact(self, interactor: Interactor):
+        self.interaction.interact(interactor)
 
 
 
@@ -91,15 +187,15 @@ class Interaction(Component):
     ### FIELDS ###
 
     icon_prompt: Sprite = None
-    interact_key: int   = None
+    interact_i: int = None
 
 
-    ### CONSTRUCTORS ###
+    ### CONSTRUCTOR ###
 
     def __init__(self,
         name: str,
         icon_path: Path=None,
-        interact_key: int=None
+        interact_i: int=None
     ):
         Component.__init__(self, name)
 
@@ -108,16 +204,61 @@ class Interaction(Component):
             self.icon_prompt = Sprite()
             self.icon_prompt.image = icon_image
             self.icon_prompt.rect  = icon_image.get_rect()
+        
+        self.interact_i = interact_i
+
+    
+    ### OPERATIONAL METHODS ###
+
+    def interact(self, interactor: Interactor): pass
+        
+
+
+class KeyInteraction(Interaction):
+
+    ### FIELDS ###
+
+    interact_key: int = None
+
+
+    ### CONSTRUCTOR ###
+
+    def __init__(self,
+        name: str,
+        interact_key: int=None,
+        **kwargs
+    ):
+        Interaction.__init__(self,
+            name,
+            interact_i=interact_key,
+            **kwargs
+        )
 
         self.interact_key = interact_key if interact_key else DEFAULT_INTERACT_KEY
-    
-    
-    def interact(self,
-        interactor: Interactor
-    ) -> bool:
-        log.sprint(interactor)
 
-        return True
+
+
+class ClickInteraction(Interaction):
+
+    ### FIELDS ###
+
+    interact_btn: int = None
+
+
+    ### CONSTRUCTOR ###
+
+    def __init__(self,
+        name: str,
+        interact_btn: int=None,
+        **kwargs
+    ):
+        Interaction.__init__(self,
+            name,
+            interact_i=interact_btn,
+            **kwargs
+        )
+
+        self.interact_btn = interact_btn if interact_btn else DEFAULT_INTERACT_BTN
 
 
 
@@ -129,7 +270,7 @@ class Interactor(Component):
     icon_group: Group     = None
     reach: float          = None
     reach_check: Sprite   = None
-    key_input: KeyInput   = None
+    input: Input          = None
 
     
     ### CONSTRUCTOR ###
@@ -139,7 +280,7 @@ class Interactor(Component):
         interact_group: Group,
         icon_group: Group,
         reach: float=None,
-        key_input: KeyInput=None
+        input: Input=None
     ):
         Component.__init__(self, name)
 
@@ -154,7 +295,16 @@ class Interactor(Component):
         )
         self.reach_check.radius = self.reach
 
-        self.key_input = key_input
+        self.input = input
+
+
+    ### OPERATIONAL METHODS ###
+
+    def interaction_trigger(self, interaction: Interaction) -> bool:
+        if not (interaction and self.input):
+            return False
+
+        return self.input.pull(interaction.interact_i)
 
     
     ### COMPONENT METHODS ###
@@ -171,7 +321,7 @@ class Interactor(Component):
         self.icon_group.empty()
         if len(collided_sprites) > 0:
             for sprite in collided_sprites:
-                interact_being: InteractBeing = sprite
+                interact_being: Interacting = sprite
                 icon: Sprite = interact_being.interaction.icon_prompt
                 
                 if icon and icon not in self.icon_group.sprites():
@@ -179,6 +329,75 @@ class Interactor(Component):
                     icon.rect.bottom  = interact_being.rect.top
                     self.icon_group.add(icon)
 
-                if self.key_input.pull_key(interact_being.interaction.interact_key):
+                if self.interaction_trigger(interact_being.interaction):
                     interact_being.interact(self)
-            
+
+
+
+class KeyInteractor(Interactor):
+
+    ### FIELDS ###
+
+    key_input: KeyInput = None
+
+    
+    ### CONSTRUCTOR ###
+
+    def __init__(self,
+        name: str,
+        interact_group: Group,
+        icon_group: Group,
+        key_input: KeyInput=None,
+        **kwargs
+    ):
+        Interactor.__init__(self,
+            name, interact_group, icon_group,
+            input=key_input,
+            **kwargs
+        )
+
+        self.key_input = key_input
+
+
+    ### INTERACTOR METHODS ###
+
+    def interaction_trigger(self, key_interaction: KeyInteraction) -> bool:
+        if not (key_interaction and self.key_input):
+            return False
+
+        return self.key_input.pull_key(key_interaction.interact_key)
+
+
+
+class ClickInteractor(Interactor):
+
+    ### FIELDS ###
+
+    mouse_input: MouseInput = None
+
+
+    ### COSTRUCTORS ###
+
+    def __init__(self,
+        name: str,
+        interact_group: Group,
+        icon_group: Group,
+        mouse_input: MouseInput=None,
+        **kwargs
+    ):
+        Interactor.__init__(self,
+            name, interact_group, icon_group,
+            input=mouse_input,
+            **kwargs
+        )
+
+        self.mouse_input = mouse_input
+
+
+    ### Interactor Methods ###
+
+    def interaction_trigger(self, click_interaction: ClickInteraction) -> bool:
+        if not (click_interaction and self.mouse_input):
+            return False
+        
+        return self.mouse_input.pull_button(click_interaction.interact_btn)

@@ -3,13 +3,20 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.31.2022 #
+# J Karstin Neill    06.03.2022 #
 #################################
 
 
 ### IMPORTS ###
 
-from . import KeyDriver, Doing
+from pygame import Vector2
+
+from . import Doing, KeyDriver, Seeker
+
+
+### CLASS STUBS ###
+
+
 
 
 ### CLASS DEFINITIONS ###
@@ -43,3 +50,30 @@ class Going(Doing):
             move_speed=move_speed
         )
         self.attach(self.driver)
+
+
+
+class Seeking(Doing):
+
+    ### FIELDS ###
+
+    driver: Seeker = None
+
+
+    ### CONSTRUCTOR ###
+
+    def __init__(self, move_speed: float=None, **kwargs):
+        Doing.__init__(self, **kwargs)
+
+        self.driver = Seeker(
+            'seeker',
+            self.motor,
+            move_speed=move_speed
+        )
+        self.attach(self.driver)
+
+    
+    ### WRAPPER METHODS ###
+
+    def set_lamp_post(self, lamp_post: Vector2=None):
+        self.driver.set_lamp_post(lamp_post)
