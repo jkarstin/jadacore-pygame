@@ -172,11 +172,12 @@ class Interactor(Component):
         if len(collided_sprites) > 0:
             for sprite in collided_sprites:
                 interact_being: InteractBeing = sprite
-
-                if interact_being.interaction.icon_prompt:
-                    interact_being.interaction.icon_prompt.rect.centerx = interact_being.rect.centerx
-                    interact_being.interaction.icon_prompt.rect.bottom  = interact_being.rect.top
-                    self.icon_group.add(interact_being.interaction.icon_prompt)
+                icon: Sprite = interact_being.interaction.icon_prompt
+                
+                if icon and icon not in self.icon_group.sprites():
+                    icon.rect.centerx = interact_being.rect.centerx
+                    icon.rect.bottom  = interact_being.rect.top
+                    self.icon_group.add(icon)
 
                 if self.key_input.pull_key(interact_being.interaction.interact_key):
                     interact_being.interact(self)

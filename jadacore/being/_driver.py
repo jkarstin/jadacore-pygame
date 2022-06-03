@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.31.2022 #
+# J Karstin Neill    06.02.2022 #
 #################################
 
 
@@ -14,7 +14,56 @@ from pygame import Vector2
 
 from jadacore.meta import PIXEL_SIZE, PIXEL_SIZE_SQUARED
 
-from . import Component, Motor, KeyInput
+from . import Component, Motor, KeyInput, MouseInput
+
+
+### CLASS STUBS ###
+
+class Driver(Component):
+    motor: Motor
+    move_speed: float
+    def __init__(self,
+        name: str,
+        motor: Motor=None,
+        move_speed: float=None
+    ): ...
+    def on_attach(self): ...
+    def set_motor(self, motor: Motor=None): ...
+class KeyDriver(Driver):
+    key_input: KeyInput
+    up_keys: list[int]
+    down_keys: list[int]
+    left_keys: list[int]
+    right_keys: list[int]
+    keys_held: list[int]
+    def __init__(self,
+        name: str,
+        key_input: KeyInput=None,
+        up_keys: list[int]=None,
+        down_keys: list[int]=None,
+        left_keys: list[int]=None,
+        right_keys: list[int]=None,
+        **kwargs
+    ): ...
+    def on_attach(self): ...
+    def update(self, dt: float): ...
+class Seeker(Driver):
+    pix_mv_spd_sqrd: float
+    lamp_post: Vector2
+    def __init__(self,
+        name: str,
+        **kwargs
+    ): ...
+    def update(self, dt: float): ...
+    def set_lamp_post(self, lamp_post: Vector2=None): ...
+class ClickSeeker(Seeker):
+    def __init__(self,
+        name: str,
+        mouse_input: MouseInput=None,
+        **kwargs
+    ): ...
+    def on_attach(self): ...
+    def update(self, dt: float): ...
 
 
 ### CONSTANTS & FLAGS ###
@@ -47,7 +96,7 @@ class Driver(Component):
         name: str,
         motor: Motor=None,
         move_speed: float=None
-    ) -> None:
+    ):
         Component.__init__(self, name)
 
         self.motor = motor
@@ -56,25 +105,17 @@ class Driver(Component):
     
     ### COMPONENT METHODS ###
 
-    def on_attach(self) -> None:
+    def on_attach(self):
         if not self.motor:
             self.motor = self.being.fetch_component('motor')
             if not self.motor:
                 self.motor = Motor('motor')
                 self.being.attach(self.motor)
 
-
-    def update(self, dt: float) -> None:
-        super().update(dt)
-
-    
-    def on_detach(self) -> None:
-        super().on_detach()
-
     
     ### AUXILIARY METHODS ###
 
-    def set_motor(self, motor: Motor=None) -> None:
+    def set_motor(self, motor: Motor=None):
         self.motor = motor
         if self.being and self.motor and not self.motor.being:
             self.being.attach(self.motor)
@@ -97,15 +138,14 @@ class KeyDriver(Driver):
 
     def __init__(self,
         name: str,
-        motor: Motor=None,
         key_input: KeyInput=None,
-        move_speed: float=None,
         up_keys: list[int]=None,
         down_keys: list[int]=None,
         left_keys: list[int]=None,
-        right_keys: list[int]=None
-    ) -> None:
-        Driver.__init__(self, name, motor, move_speed)
+        right_keys: list[int]=None,
+        **kwargs
+    ):
+        Driver.__init__(self, name, **kwargs)
 
         self.key_input = key_input
 
@@ -115,12 +155,10 @@ class KeyDriver(Driver):
         self.right_keys = right_keys if right_keys else DEFAULT_KEYS['right_key']
         self.keys_held  = []
 
-
+    
     ### COMPONENT METHODS ###
 
-    ### COMPONENT METHODS ###
-
-    def on_attach(self) -> None:
+    def on_attach(self):
         super().on_attach()
         
         if not self.key_input:
@@ -130,8 +168,8 @@ class KeyDriver(Driver):
                 self.being.attach(self.key_input)
 
 
-    def update(self, dt: float) -> None:
-        def tickle_keys(keylist: list[int]) -> None:
+    def update(self, dt: float):
+        def tickle_keys(keylist: list[int]):
             for key in keylist:
                 if self.key_input.check_key(key):
                     if key not in self.keys_held:
@@ -164,10 +202,6 @@ class KeyDriver(Driver):
         self.motor.move(move_vect)
 
 
-    def on_detach(self) -> None:
-        super().on_detach()
-
-
 
 class Seeker(Driver):
 
@@ -181,21 +215,16 @@ class Seeker(Driver):
 
     def __init__(self,
         name: str,
-        motor: Motor=None,
-        move_speed: float=None
-    ) -> None:
-        Driver.__init__(self, name, motor, move_speed)
+        **kwargs
+    ):
+        Driver.__init__(self, name, **kwargs)
 
         self.pix_mv_spd_sqrd = self.move_speed * self.move_speed * PIXEL_SIZE_SQUARED
 
 
     ### COMPONENT METHODS ###
 
-    def on_attach(self) -> None:
-        super().on_attach()
-
-
-    def update(self, dt: float) -> None:
+    def update(self, dt: float):
         if self.lamp_post:
             delta: Vector2 = self.lamp_post - self.being.pos
 
@@ -212,13 +241,49 @@ class Seeker(Driver):
                 distance: float = delta.length()
                 delta.scale_to_length(distance / (PIXEL_SIZE * dt))
                 self.motor.move(delta)
-    
-
-    def on_detach(self) -> None:
-        super().on_detach()
 
 
     ### OPERATIONAL METHODS ###
 
-    def set_lamp_post(self, lamp_post: Vector2=None) -> None:
+    def set_lamp_post(self, lamp_post: Vector2=None):
         self.lamp_post = lamp_post
+
+
+
+class ClickSeeker(Seeker):
+
+    ### FIELDS ###
+
+    mouse_input: MouseInput = None
+
+
+    ### CONSTRUCTOR ###
+
+    def __init__(self,
+        name: str,
+        mouse_input: MouseInput=None,
+        **kwargs
+    ):
+        Seeker.__init__(self, name, **kwargs)
+
+        self.mouse_input = mouse_input
+
+    
+    ### COMPONENT METHODS ###
+
+    def on_attach(self):
+        super().on_attach()
+        
+        if not self.mouse_input:
+            self.mouse_input = self.being.fetch_component('mouse_input')
+            if not self.mouse_input:
+                self.mouse_input = MouseInput('mouse_input')
+                self.being.attach(self.mouse_input)
+
+
+    def update(self, dt: float):
+        super().update(dt)
+
+        if self.mouse_input.pull_button(pygame.BUTTON_LEFT):
+            if self.mouse_input.mouse_pos:
+                self.set_lamp_post(self.mouse_input.mouse_pos)

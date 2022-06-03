@@ -9,58 +9,131 @@
 
 ### IMPORTS ###
 
+from typing import Callable
 import pygame
+from pygame import Vector2
 
 from . import Component
 
 
+### CLASS STUBS ###
+
+class Input(Component):
+    pressed: list[bool]
+    pulled: list[int]
+    gather_function: Callable
+    def __init__(self, name: str, gather_function: Callable): ...
+    def update(self, dt: float): ...
+    def check(self, i: int, pull: bool=False) -> bool: ...
+    def pull(self, i: int) -> bool: ...
+class KeyInput(Input):
+    def __init__(self, name: str): ...
+    def check_key(self, key: int, pull: bool=False) -> bool: ...
+    def pull_key(self, key: int) -> bool: ...
+class MouseInput(Input):
+    def __init__(self, name: str): ...
+    def check_button(self, btn: int, pull: bool=False) -> bool: ...
+    def pull_button(self, btn: int) -> bool: ...
+
+
 ### CLASS DEFINITIONS ###
 
-class KeyInput(Component):
+class Input(Component):
+    pressed: list[bool]       = None
+    pulled: list[int]         = None
+    gather_function: Callable = None
 
+    def __init__(self,
+        name: str,
+        gather_function: Callable
+    ):
+        Component.__init__(self, name)
+
+        self.pressed = []
+        self.pulled  = []
+        self.gather_function = gather_function
+
+    
+    def update(self, dt: float):
+        if self.gather_function:
+            self.pressed = self.gather_function()
+        self.pulled = []
+    
+    
+    def check(self,
+        i: int,
+        pull: bool=False
+    ) -> bool:
+        state: bool = False
+
+        N: int = len(self.pressed)
+        if i in range(N) and i not in self.pulled:
+            state = self.pressed[i]
+            if pull:
+                self.pulled.append(i)
+        
+        return state
+
+    
+    def pull(self,
+        i: int
+    ) -> bool:
+        return self.check(i, pull=True)
+
+
+
+class KeyInput(Input):
+
+    ### CONSTRUCTOR ###
+
+    def __init__(self,
+        name: str
+    ):
+        Input.__init__(self, name, pygame.key.get_pressed)
+
+
+    ### WRAPPER METHODS ###
+
+    def check_key(self, key: int, pull: bool=False) -> bool:
+        return super().check(key, pull)
+
+
+    def pull_key(self, key: int) -> bool:
+        return super().pull(key)
+
+
+
+class MouseInput(Input):
+    
     ### FIELDS ###
 
-    key_pressed: list[bool] = None
-    key_pulled: list[int]   = None
+    mouse_pos: Vector2 = None
 
 
     ### CONSTRUCTOR ###
 
     def __init__(self,
-        name:str
-    ) -> None:
-        Component.__init__(self, name)
-
-        self.key_pressed = []
-        self.key_pulled  = []
+        name: str
+    ):
+        Input.__init__(self, name, pygame.mouse.get_pressed)
 
 
     ### COMPONENT METHODS ###
 
-    def on_attach(self) -> None: super().on_attach()
+    def update(self, dt: float):
+        super().update(dt)
+
+        mouse_pos_raw: tuple[int, int] = pygame.mouse.get_pos()
+        self.mouse_pos = Vector2(*mouse_pos_raw)
 
 
-    def update(self, dt: float) -> None:
-        self.key_pressed = pygame.key.get_pressed()
-        self.key_pulled = []
+    ### WRAPPER METHODS ###
+
+    def check_button(self, btn: int, pull: bool=False) -> bool:
+        # NOTE: use btn-1 to index pressed, as this is how pygame.mouse.get_pressed() stores these states
+        return super().check(btn-1, pull)
 
 
-    def on_detach(self) -> None: super().on_detach()
-
-
-    ### OPERATIONAL METHODS ###
-
-    def check_key(self, key: int, pull: bool=False) -> bool:
-        key_state: bool = False
-
-        K: int = len(self.key_pressed)
-        if key in range(K) and key not in self.key_pulled:
-            key_state = self.key_pressed[key]
-            if pull:
-                self.key_pulled.append(key)
-        
-        return key_state
-
-
-    def pull_key(self, key: int) -> bool:
-        return self.check_key(key, pull=True)
+    def pull_button(self, btn: int) -> bool:
+        # NOTE: use btn-1 to index pressed, as this is how pygame.mouse.get_pressed() stores these states
+        return super().pull(btn-1)

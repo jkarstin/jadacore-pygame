@@ -3,7 +3,7 @@
 #==================================#
 #                                  #
 #----------------------------------#
-# J Karstin Neill       05.18.2022 #
+# J Karstin Neill       06.02.2022 #
 ####################################
 
 
@@ -13,7 +13,7 @@ from pygame import Vector2
 
 from jadacore.being  import ItemBeing
 from jadacore.game   import World
-from jadacore.player import KeyPlayer, SeekPlayer
+from jadacore.player import ClickPlayer
 
 from ghost import Ghost
 
@@ -24,22 +24,33 @@ class StartWorld(World):
 
     ### FIELDS ###
 
-    key_item: ItemBeing = None
-    ghost: Ghost            = None
-    seek_player: SeekPlayer = None
-    key_player: KeyPlayer   = None
+    key_item: ItemBeing       = None
+    ghost: Ghost              = None
+    click_player: ClickPlayer = None
 
 
     ### OPERATIONAL METHODS ###
 
     def setup(self):
-        self.key_item = ItemBeing('key.png', 'key-item', 0.0, 'cue_icon.png', pos=Vector2(100, 100))
-        self.ghost = Ghost(pos=Vector2(650, 125))
-        self.seek_player = SeekPlayer(self.interact_group, self.icon_group, 'ghosti.ss.png', move_speed=10.0, sprite_sheet_dims=Vector2(2), pos=Vector2(300, 150))
-        self.seek_player.set_lamp_post(Vector2(400, -10))
-        self.key_player = KeyPlayer(self.interact_group, self.icon_group, 'ghosti.ss.png', sprite_sheet_dims=Vector2(2), pos=Vector2(200, 175))
+        self.key_item = ItemBeing(
+            'key.png', 'key-item', 0.0, 'cue_icon.png',
+            pos=Vector2(100, 100)
+        )
+        
+        self.ghost = Ghost(
+            pos=Vector2(650, 125)
+        )
+        
+        self.click_player = ClickPlayer(
+            self.interact_group, self.icon_group, 'ghosti.ss.png', 10.0,
+            sprite_sheet_dims=Vector2(2), pos=Vector2(300, 150)
+        )
 
-        self.add(self.key_item, self.ghost, self.seek_player, self.key_player)
+        self.add(
+            self.key_item,
+            self.ghost,
+            self.click_player
+        )
 
     
     def update(self, dt: float):

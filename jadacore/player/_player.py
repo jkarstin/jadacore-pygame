@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.01.2022 #
+# J Karstin Neill    06.02.2022 #
 #################################
 
 
@@ -14,9 +14,58 @@ from pygame import Vector2
 from pygame.sprite import Group
 
 from jadacore.being import (
-    KeyInput, Driver, KeyDriver, Seeker, Item, Inventory,
+    KeyInput, MouseInput,
+    Driver, KeyDriver, Seeker, ClickSeeker,
+    Item, Inventory,
     Doing, ItemBeing
 )
+
+
+### CLASS STUB ###
+
+class Player(Doing):
+    inventory: Inventory
+    key_input: KeyInput
+    driver: Driver
+    def __init__(self,
+        interact_group: Group,
+        icon_group: Group,
+        sprite_sheet_path: Path,
+        driver: Driver=None,
+        reach: float=None,
+        **kwargs
+    ): ...
+    def pick_up(self, item_being: ItemBeing=None) -> float: ...
+    def add_item(self, item: Item=None) -> float: ...
+class KeyPlayer(Player):
+    driver: KeyDriver
+    def __init__(self,
+        interact_group: Group,
+        icon_group: Group,
+        sprite_sheet_path: Path,
+        move_speed: float=None,
+        **kwargs
+    ): ...
+class SeekPlayer(Player):
+    driver: Seeker
+    def __init__(self,
+        interact_group: Group,
+        icon_group: Group,
+        sprite_sheet_path: Path,
+        move_speed: float=None,
+        **kwargs
+    ): ...
+    def set_lamp_post(self, lamp_post: Vector2=None): ...
+class ClickPlayer(SeekPlayer):
+    driver: ClickSeeker
+    mouse_input: MouseInput
+    def __init__(self,
+        interact_group: Group,
+        icon_group: Group,
+        sprite_sheet_path: Path,
+        move_speed: float=None,
+        **kwargs
+    ): ...
 
 
 ### CLASS DEFINITIONS ###
@@ -97,10 +146,7 @@ class Player(Doing):
 
         self.inventory = Inventory(
             'inventory',
-            interact_group=interact_group,
-            icon_group=icon_group,
-            reach=reach,
-            key_input=self.key_input
+            interact_group=interact_group, icon_group=icon_group, reach=reach, key_input=self.key_input
         )
         self.attach(self.inventory)
 
@@ -166,18 +212,15 @@ class KeyPlayer(Player):
         sprite_sheet_path: Path,
         move_speed: float=None,
         **kwargs
-    ) -> None:
+    ):
         Player.__init__(self,
-            interact_group,
-            icon_group,
-            sprite_sheet_path,
+            interact_group, icon_group, sprite_sheet_path,
             **kwargs
         )
 
         self.driver = KeyDriver(
             'key_driver',
-            self.motor,
-            move_speed
+            motor=self.motor, move_speed=move_speed
         )
         self.attach(self.driver)
 
@@ -206,18 +249,15 @@ class SeekPlayer(Player):
         sprite_sheet_path: Path,
         move_speed: float=None,
         **kwargs
-    ) -> None:
+    ):
         Player.__init__(self,
-            interact_group,
-            icon_group,
-            sprite_sheet_path,
+            interact_group, icon_group, sprite_sheet_path,
             **kwargs
         )
 
         self.driver = Seeker(
             'seeker',
-            self.motor,
-            move_speed
+            motor=self.motor, move_speed=move_speed
         )
         self.attach(self.driver)
     
@@ -226,4 +266,37 @@ class SeekPlayer(Player):
 
     def set_lamp_post(self, lamp_post: Vector2=None) -> None:
         self.driver.set_lamp_post(lamp_post)
-        
+
+
+
+class ClickPlayer(SeekPlayer):
+
+    ### FIELDS ###
+
+    driver: ClickSeeker     = None
+    mouse_input: MouseInput = None
+
+
+    ### CONSTRUCTORS ###
+
+    def __init__(self,
+        interact_group: Group,
+        icon_group: Group,
+        sprite_sheet_path: Path,
+        move_speed: float=None,
+        **kwargs
+    ):
+        SeekPlayer.__init__(self,
+            interact_group, icon_group, sprite_sheet_path,
+            **kwargs
+        )
+
+        self.mouse_input = MouseInput('mouse_input')
+        self.attach(self.mouse_input)
+
+        self.driver = ClickSeeker(
+            'click_seeker', self.mouse_input,
+            motor=self.motor, move_speed=move_speed
+        )
+        self.attach(self.driver)
+    

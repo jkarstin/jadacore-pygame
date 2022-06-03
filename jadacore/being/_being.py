@@ -22,7 +22,14 @@ from jadacore.util import ERROR_UNNAMED_COMPONENT
 
 ### CLASS STUBS ###
 
+class Component:
+    def __init__(self, name: str ): ...
 class Being(Sprite):
+    pos: Vector2
+    size: Vector2
+    image: Surface
+    rect: Rect
+    components: dict[str, Component] = None
     def __init__(self,
         pos: Vector2=None,
         size: Vector2=None,
@@ -31,10 +38,8 @@ class Being(Sprite):
         groups: list[Group]=None
     ): ...
 class Component:
-    def __init__(self,
-        name: str
-    ): ...
-class Component:
+    name: str
+    being: Being
     def __init__(self, name: str): ...
     def attach_to(self, being: Being=None) -> Component: ...
     def detach_from(self, being: Being=None) -> Component: ...
