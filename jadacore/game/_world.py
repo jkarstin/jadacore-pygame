@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.31.2022 #
+# J Karstin Neill    06.03.2022 #
 #################################
 
 
@@ -12,11 +12,8 @@
 from pygame import Surface
 from pygame.sprite import Group
 
-from jadacore.being import Being, Interacting
+from jadacore.being import Being, Interactable
 from jadacore.meta import WINDOW_SIZE
-
-
-### CONSTANTS & FLAGS ###
 
 
 ### CLASS DEFINITIONS ###
@@ -68,6 +65,6 @@ class World:
 
     def add(self, *beings: Being) -> None:
         for being in beings:
-            if isinstance(being, Interacting):
+            if isinstance(being, Interactable):
                 self.interact_group.add(being)
             self.world_group.add(*beings)

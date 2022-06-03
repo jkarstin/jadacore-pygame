@@ -16,7 +16,7 @@ import re
 import jadacore.util.log as log
 
 from . import (
-    Interacting,
+    Interactable,
     KeyInteraction,
     Interactor, KeyInteractor
 )
@@ -24,7 +24,7 @@ from . import (
 
 ### CLASS STUBS ###
 
-class ItemBeing(Interacting):
+class ItemBeing(Interactable):
     def __init__(self,
         sprite_sheet_path: Path,
         name: str,        
@@ -48,7 +48,7 @@ class Inventory(KeyInteractor):
         **kwargs
     ): ...
 
-class ItemBeing(Interacting):
+class ItemBeing(Interactable):
     item: Item
     def __init__(self,
         sprite_sheet_path: Path,
@@ -96,7 +96,7 @@ DEFAULT_SPACE_MAX: float = 50.0
 
 ### CLASS DEFINITIONS ###
 
-class ItemBeing(Interacting):
+class ItemBeing(Interactable):
 
     ### FIELDS ###
 
@@ -113,7 +113,7 @@ class ItemBeing(Interacting):
         interact_key: int=None,
         **kwargs
     ):
-        Interacting.__init__(self, sprite_sheet_path, **kwargs)
+        Interactable.__init__(self, sprite_sheet_path, **kwargs)
 
         self.item = Item(
             name, space,

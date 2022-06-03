@@ -21,7 +21,7 @@ from . import Component, Doing, Input, KeyInput, MouseInput
 
 ### CLASS STUBS ###
 
-class Interacting(Doing):
+class Interactable(Doing):
     def __init__(self,
         sprite_sheet_path: Path,
         icon_path: Path=None,
@@ -71,7 +71,7 @@ class ClickInteractor(Interactor):
         **kwargs
     ): ...
 
-class Interacting(Doing):
+class Interactable(Doing):
     interaction: Interaction
     def __init__(self,
         sprite_sheet_path: Path,
@@ -154,7 +154,7 @@ DEFAULT_REACH: float = 20
 
 ### CLASS DEFINITIONS ###
 
-class Interacting(Doing):
+class Interactable(Doing):
 
     ### FIELDS ###
 
@@ -321,7 +321,7 @@ class Interactor(Component):
         self.icon_group.empty()
         if len(collided_sprites) > 0:
             for sprite in collided_sprites:
-                interact_being: Interacting = sprite
+                interact_being: Interactable = sprite
                 icon: Sprite = interact_being.interaction.icon_prompt
                 
                 if icon and icon not in self.icon_group.sprites():

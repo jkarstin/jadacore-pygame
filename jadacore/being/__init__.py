@@ -15,7 +15,7 @@ from ._going    import Going, Seeking
 
 # Interacting classes
 from ._interact import (
-    Interacting,
+    Interactable,
     Interaction, KeyInteraction, ClickInteraction,
     Interactor, KeyInteractor, ClickInteractor
 )
