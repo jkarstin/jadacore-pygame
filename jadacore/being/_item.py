@@ -126,13 +126,8 @@ class ItemBeing(Interactable):
     ### WRAPPER METHODS ###
 
     def interact(self, interactor: Inventory):
-        if interactor:
-            log.sprint(f"ItemBeing {self} with Item {self.item} interacted with by: {interactor}")
+        self.item.interact(interactor)
 
-            if isinstance(interactor, Inventory):
-                inventory: Inventory = interactor
-                self.remove(self.groups())
-                inventory.add_item(self.item)
 
 
 class Item(KeyInteraction):
@@ -182,6 +177,16 @@ class Item(KeyInteraction):
         KeyInteraction.__init__(self, name, **kwargs)
 
         self.space = space if space else DEFAULT_SPACE
+
+
+    def interact(self, interactor: Interactor):
+        if self.being and interactor:
+            log.sprint(f"Being {self.being} with Item {self} interacted with by: {interactor}")
+
+            if isinstance(interactor, Inventory):
+                inventory: Inventory = interactor
+                self.being.remove(self.being.groups())
+                inventory.add_item(self)
 
 
 
