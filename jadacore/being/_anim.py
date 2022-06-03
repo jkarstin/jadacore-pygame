@@ -261,7 +261,7 @@ class Animation(Component):
 
     def get_frame(self, i: int=None) -> Surface:
         if i:
-            if i >= 0 and i < len(self.frames):
+            if i in range(len(self.frames)):
                 return self.frames[i]
 
             return None
@@ -323,7 +323,7 @@ class Animator(Component):
             self.being.detach(self.current_animation)
 
 
-    ### OPERATIONAL METHODS ###
+    ### WRAPPER METHODS ###
 
     def start(self):
         self.current_animation.start()
@@ -336,6 +336,8 @@ class Animator(Component):
     def stop(self):
         self.current_animation.stop()
 
+
+    ### OPERATIONAL METHODS ###
 
     def add_animation(self,
         anim_name: str,
