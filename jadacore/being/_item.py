@@ -66,6 +66,7 @@ class Item(KeyInteraction):
         space: float=None,
         **kwargs
     ): ...
+    def interact(self, interactor: Interactor): ...
 class Inventory(KeyInteractor):
     items: dict[str, list[Item]]
     space_used: float
