@@ -1,3 +1,18 @@
+__all__ = [
+    'Being', 'Component',
+    'Doing',
+    'Animation', 'Animator',
+    'Motor', 'StepMotor',
+    'Input', 'KeyInput', 'MouseInput',
+    'Going', 'Seeking',
+    'Driver', 'KeyDriver', 'Seeker', 'ClickSeeker',
+    'Interactable',
+    'Interaction', 'KeyInteraction', 'ClickInteraction',
+    'Interactor', 'KeyInteractor', 'ClickInteractor',
+    'ItemBeing',
+    'Item', 'Inventory'
+]
+
 # Being classes
 from ._being import Being, Component
 
@@ -21,5 +36,9 @@ from ._interact import (
     Interaction, KeyInteraction, ClickInteraction,
     Interactor, KeyInteractor, ClickInteractor
 )
-from ._item     import ItemBeing, Item, Inventory
 
+# ItemBeing classes
+from ._item import (
+    ItemBeing,
+    Item, Inventory
+)
