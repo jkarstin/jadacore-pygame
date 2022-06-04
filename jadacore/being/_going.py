@@ -9,6 +9,7 @@
 
 ### IMPORTS ###
 
+from pathlib import Path
 import pygame
 from pygame import Vector2
 
@@ -21,6 +22,8 @@ from . import Component, Doing, Motor, KeyInput, MouseInput
 
 class Going(Doing):
     def __init__(self,
+        sprite_sheet_path: Path,
+        key_input: KeyInput=None,
         up_keys: list[int]=None,
         down_keys: list[int]=None,
         left_keys: list[int]=None,
@@ -30,6 +33,7 @@ class Going(Doing):
     ): ...
 class Seeking(Doing):
     def __init__(self,
+        sprite_sheet_path: Path,
         move_speed: float=None,
         **kwargs
     ): ...
@@ -64,6 +68,8 @@ class ClickSeeker(Seeker):
 class Going(Doing):
     driver: KeyDriver
     def __init__(self,
+        sprite_sheet_path: Path,
+        key_input: KeyInput=None,
         up_keys: list[int]=None,
         down_keys: list[int]=None,
         left_keys: list[int]=None,
@@ -74,6 +80,7 @@ class Going(Doing):
 class Seeking(Doing):
     driver: Seeker
     def __init__(self,
+        sprite_sheet_path: Path,
         move_speed: float=None,
         **kwargs
     ): ...
@@ -151,6 +158,8 @@ class Going(Doing):
     ### CONSTRUCTOR ###
 
     def __init__(self,
+        sprite_sheet_path: Path,
+        key_input: KeyInput=None,
         up_keys: list[int]=None,
         down_keys: list[int]=None,
         left_keys: list[int]=None,
@@ -158,16 +167,14 @@ class Going(Doing):
         move_speed: float=None,
         **kwargs
     ) -> None:
-        Doing.__init__(self, **kwargs)
+        Doing.__init__(self,
+            sprite_sheet_path,
+            **kwargs
+        )
 
-        self.driver = KeyDriver(
-            'key_driver',
-            self.motor,
-            up_keys,
-            down_keys,
-            left_keys,
-            right_keys,
-            move_speed=move_speed
+        self.driver = KeyDriver('key_driver',
+            key_input, up_keys, down_keys, left_keys, right_keys,
+            motor=self.motor, move_speed=move_speed
         )
         self.attach(self.driver)
 
@@ -183,15 +190,17 @@ class Seeking(Doing):
     ### CONSTRUCTOR ###
 
     def __init__(self,
+        sprite_sheet_path: Path,
         move_speed: float=None,
         **kwargs
     ):
-        Doing.__init__(self, **kwargs)
+        Doing.__init__(self,
+            sprite_sheet_path,
+            **kwargs
+        )
 
-        self.driver = Seeker(
-            'seeker',
-            self.motor,
-            move_speed=move_speed
+        self.driver = Seeker('seeker',
+            motor=self.motor, move_speed=move_speed
         )
         self.attach(self.driver)
 
