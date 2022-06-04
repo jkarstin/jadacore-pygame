@@ -188,8 +188,11 @@ class World:
     ### OPERATIONAL FUNCTIONS ###
 
     def setup(self): pass
-    def update(self, dt: float): pass
 
+
+    def update(self, dt: float):
+        self.update_world(dt)
+        
 
     def update_world(self, dt: float):
         self.world_group.update(dt)

@@ -3,7 +3,7 @@
 #==================================#
 #                                  #
 #----------------------------------#
-# J Karstin Neill       06.02.2022 #
+# J Karstin Neill       06.03.2022 #
 ####################################
 
 
@@ -55,4 +55,4 @@ class StartWorld(World):
     
     def update(self, dt: float):
         self.ghost.move(Vector2(-5, 0.0))
-        self.update_world(dt)
+        super().update(dt)

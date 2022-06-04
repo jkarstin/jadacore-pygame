@@ -1,16 +1,15 @@
-#################################
-# components.py                 #
-#===============================#
-#                               #
-#-------------------------------#
-# J Karstin Neill    05.13.2022 #
-#################################
+###################################
+# components.py    [v0.0.1-alpha] #
+#=================================#
+#                                 #
+#---------------------------------#
+# J Karstin Neill      06.03.2022 #
+###################################
 
 
 ### IMPORTS ###
 
-from jadacore.being import Being
-from jadacore.comp import Motor, KeyDriver
+from jadacore.being import *
 from jadacore.game import Game, World
 
 
@@ -20,24 +19,16 @@ class SimpleWorld(World):
 
     ### FIELDS ###
 
-    custom_being: Being      = None
-    custom_motor: Motor      = None
-    custom_driver: KeyDriver = None
+    custom_being: Being = None
 
 
     ### WORLD METHODS ###
 
-    def setup(self) -> None:
+    def setup(self):
         self.custom_being = Being()
-        self.custom_motor = Motor('motor')
-        self.custom_driver = KeyDriver('key_driver', self.custom_motor)
-        self.custom_being.attach_component(self.custom_motor)
-        self.custom_being.attach_component(self.custom_driver)
+        self.custom_being.attach(KeyDriver('key_driver'))
+
         self.add(self.custom_being)
-
-
-    def update(self, dt: float) -> None:
-        super().update_world(dt)
 
 
 ### MAIN FUNCTION DEFINITION ###
