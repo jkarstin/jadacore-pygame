@@ -1,5 +1,5 @@
 # Activate virtual environment 'env'
-.\env\Scripts\activate
+env/Scripts/activate
 
 # Intiailize environment variables
 $Env:PYTHONPATH = '.'

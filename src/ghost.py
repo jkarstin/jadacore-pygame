@@ -3,7 +3,7 @@
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.10.2022 #
+# J Karstin Neill    06.03.2022 #
 #################################
 
 
@@ -20,7 +20,7 @@ class Ghost(Doing):
 
     ### CONSTRUCTOR ###
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs):
         Doing.__init__(self,
             'ghosti.ss.png',
             sprite_sheet_dims=Vector2(2, 2),
