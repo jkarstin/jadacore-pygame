@@ -29,7 +29,8 @@ class World:
     def __init__(self
     ): ...
 class Screen:
-    def __init__(self
+    def __init__(self,
+        size: Vector2=None
     ): ...
 class Window:
     def __init__(self
@@ -57,6 +58,7 @@ class Game:
     ): ...
 class Window:
     size: Vector2
+    window_surface: Surface
     screens: list[Screen]
     active_screen_index: int
     worlds: list[World]
@@ -81,10 +83,13 @@ class Window:
         world: World
     ): ...
 class Screen:
+    window_surface: Surface
     size: Vector2
-    base_surface: Surface
+    screen_surface: Surface
     #input_manager: InputManager
-    def __init__(self
+    def __init__(self,
+        window_surface: Surface,
+        size: Vector2=None
     ): ...
 class World:
     world_group: Group
@@ -102,7 +107,7 @@ class World:
         dt: float
     ): ...
     def draw(self,
-        base_screen: Surface
+        screen: Screen
     ): ...
     def add(self,
         *beings: Being
@@ -179,6 +184,7 @@ class Window:
     ### FIELDS ###
 
     size: Vector2            = None
+    window_surface: Surface  = None
     screens: list[Screen]    = None
     active_screen_index: int = None
     worlds: list[World]      = None
@@ -189,7 +195,8 @@ class Window:
 
     def __init__(self):
         self.size = WINDOW_SIZE
-        self.screens = [pygame.display.set_mode(WINDOW_SIZE)]
+        self.window_surface = pygame.display.set_mode(WINDOW_SIZE)
+        self.screens = [Screen(self.window_surface)]
         self.active_screen_index = 0
         self.worlds = []
         self.active_world_index = -1
@@ -238,6 +245,27 @@ class Window:
         
 
 
+class Screen:
+
+    ### FIELDS ###
+
+    window_surface: Surface     = None
+    size: Vector2               = None
+    screen_surface: Surface     = None
+    #input_manager: InputManager = None
+
+
+    ### CONSTRUCTOR ###
+
+    def __init__(self,
+        window_surface: Surface,
+        size: Vector2=None
+    ):
+        self.window_surface = window_surface
+        self.size = size if size else Vector2(window_surface.get_size())
+        self.screen_surface = Surface(self.size)
+
+
 
 class World:
 
@@ -263,7 +291,7 @@ class World:
 
     def setup(self): pass
 
-    
+
     def update(self, dt: float):
         self.update_world(dt)
         
@@ -273,16 +301,16 @@ class World:
         self.icon_group.update(dt)
 
     
-    def draw(self, screen_surface: Surface):
-        self.world_group.clear(screen_surface, self.clear_surface)
-        self.icon_group.clear(screen_surface, self.clear_surface)
+    def draw(self, screen: Screen):
+        self.world_group.clear(screen.window_surface, self.clear_surface)
+        self.icon_group.clear(screen.window_surface, self.clear_surface)
 
         for sprite in self.world_group.sprites():
             being: Being = sprite
             being.pre_render()
 
-        self.world_group.draw(screen_surface)
-        self.icon_group.draw(screen_surface)
+        self.world_group.draw(screen.window_surface)
+        self.icon_group.draw(screen.window_surface)
 
 
     ### UTILITY FUNCTIONS ###
