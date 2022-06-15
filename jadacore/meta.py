@@ -1,9 +1,9 @@
 #################################
-# meta.py        [v0.0.1-alpha] #
+# meta.py        [v0.0.2-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.10.2022 #
+# J Karstin Neill    06.14.2022 #
 #################################
 
 
@@ -20,10 +20,5 @@ RESOURCES_PATH: Path = Path('./resources')
 ### GAME CONSTANTS ###
 
 PIXEL_SIZE: int = 4
+PIXEL_SIZE_SQUARED: int = PIXEL_SIZE * PIXEL_SIZE
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 160 * PIXEL_SIZE, 90 * PIXEL_SIZE
-
-
-### EXIT/ERROR CODES ###
-
-EXIT_SUCCESS: int  = 0
-ERROR_GENERIC: int = 1
