@@ -3,6 +3,5 @@
 
 # pygame.egg
 env/
-*.ps1
 __pycache__/
 .pytest_cache/

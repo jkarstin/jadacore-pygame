@@ -1,9 +1,9 @@
 #################################
-# ghost.py       [v0.0.1-alpha] #
+# ghost.py       [v0.0.2-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.10.2022 #
+# J Karstin Neill    06.14.2022 #
 #################################
 
 
@@ -11,7 +11,7 @@
 
 from pygame import Vector2
 
-from jadacore.being import Doing
+from jadacore.doing import Doing
 
 
 ### CLASS DEFINITIONS ###
@@ -20,5 +20,11 @@ class Ghost(Doing):
 
     ### CONSTRUCTOR ###
 
-    def __init__(self, **kwargs) -> None:
-        Doing.__init__(self, 'ghost.ss.gif', sprite_sheet_size=Vector2(2, 2), **kwargs)
+    def __init__(self, **kwargs):
+        Doing.__init__(self,
+            'ghosti.ss.png',
+            sprite_sheet_dims=Vector2(2, 2),
+            frames_per_second=1.7,
+            default_anim_name='float',
+            **kwargs
+        )
