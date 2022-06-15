@@ -12,7 +12,7 @@
 import sys
 
 from jadacore.game import Game
-from jadacore.util import Log
+from jadacore.util import EXIT_SUCCESS
 
 from start_world import StartWorld
 
@@ -35,7 +35,7 @@ def main(argv: list[str], argc: int) -> int:
     game: Game = TransPlanarGame()
     game.run()
 
-    return Log.EXIT_SUCCESS
+    return EXIT_SUCCESS
 
 
 ### UTILITY FUNCTIONS ###

@@ -1,5 +1,5 @@
 # jadacore-pygame
-###### v0.0.1-alpha
+###### v0.0.2-alpha
 ---
 
 ## Package Structure
@@ -8,34 +8,40 @@
   - jadacore.being
     - jadacore.being.**Being**
     - jadacore.being.**Component**
-    - jadacore.being.**Animation**
-    - jadacore.being.**Animator**
-    - jadacore.being.**Motor**
-    - jadacore.being.**StepMotor**
-    - jadacore.being.**Doing**
-    - jadacore.being.**Input**
-    - jadacore.being.**KeyInput**
-    - jadacore.being.**MouseInput**
-    - jadacore.being.**Driver**
-    - jadacore.being.**KeyDriver**
-    - jadacore.being.**Seeker**
-    - jadacore.being.**ClickSeeker**
-    - jadacore.being.**Going**
-    - jadacore.being.**Seeking**
-    - jadacore.being.**Interactable**
-    - jadacore.being.**Interaction**
-    - jadacore.being.**KeyInteraction**
-    - jadacore.being.**ClickInteraction**
-    - jadacore.being.**Interactor**
-    - jadacore.being.**KeyInteractor**
-    - jadacore.being.**ClickInteractor**
-    - jadacore.being.**ItemBeing**
-    - jadacore.being.**Item**
-    - jadacore.being.**Inventory**
+  - jadacore.doing
+    - jadacore.doing.**Doing**
+    - jadacore.doing.**Animation**
+    - jadacore.doing.**Animator**
+    - jadacore.doing.**Motor**
+    - jadacore.doing.**StepMotor**
+  - jadacore.input
+    - jadacore.input.**Input**
+    - jadacore.input.**KeyInput**
+    - jadacore.input.**MouseInput**
+  - jadacore.going
+    - jadacore.going.**Driving**
+    - jadacore.going.**Going**
+    - jadacore.going.**Seeking**
+    - jadacore.going.**Driver**
+    - jadacore.going.**KeyDriver**
+    - jadacore.going.**Seeker**
+    - jadacore.going.**ClickSeeker**
+  - jadacore.interact
+    - jadacore.interact.**Interactable**
+    - jadacore.interact.**Interaction**
+    - jadacore.interact.**KeyInteraction**
+    - jadacore.interact.**ClickInteraction**
+    - jadacore.interact.**Interactor**
+    - jadacore.interact.**KeyInteractor**
+    - jadacore.interact.**ClickInteractor**
+  - jadacore.item
+    - jadacore.item.**ItemBeing**
+    - jadacore.item.**Item**
+    - jadacore.item.**Inventory**
   - jadacore.game
+    - jadacore.game.**Game**
     - jadacore.game.**World**
     - jadacore.game.**Window**
-    - jadacore.game.**Game**
   - jadacore.meta
     - jadacore.meta.<ins>RESOURCES_PATH</ins>
     - jadacore.meta.<ins>PIXEL_SIZE</ins>
@@ -49,16 +55,13 @@
     - jadacore.player.**SeekPlayer**
     - jadacore.player.**ClickPlayer**
   - jadacore.util
-    - jadacore.util.*pox*
-    - jadacore.util.*load_pixel_image*
-    - jadacore.util.*error*
-    - jadacore.util.*sprint*
     - jadacore.util.<ins>EXIT_SUCCESS</ins>,
     - jadacore.util.<ins>ERROR_GENERIC</ins>,
-    - jadacore.util.<ins>ERROR_UNNAMED_COMPONENT</ins>
-    - jadacore.util.log
-      - jadacore.util.log.*error*
-      - jadacore.util.log.*sprint*
+    - jadacore.util.<ins>ERROR_UNNAMED_COMPONENT</ins>    
+    - jadacore.util.*pox*
+    - jadacore.util.*load_pixel_image*
+    - jadacore.util.**Stylist**
+    - jadacore.util.**Log**
 
 ---
 

@@ -16,7 +16,7 @@ from pygame.sprite import Group, Sprite
 
 from jadacore.meta import RESOURCES_PATH, PIXEL_SIZE
 import jadacore.util as util
-from jadacore.util import Log
+from jadacore.util import Log, ERROR_UNNAMED_COMPONENT
 
 
 ### CLASS STUBS ###
@@ -292,7 +292,7 @@ class Component:
         --------
         - <Component> - Instance of Component class.
         """
-        if not name: Log.error("Cannot initialize Component without a name!", Log.ERROR_UNNAMED_COMPONENT)
+        if not name: Log.error("Cannot initialize Component without a name!", ERROR_UNNAMED_COMPONENT)
         self.name = name
 
     

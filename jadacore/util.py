@@ -17,6 +17,14 @@ import sys
 from jadacore.meta import PIXEL_SIZE, RESOURCES_PATH
 
 
+### CONSTANTS & FLAGS ###
+
+# EXIT/ERROR CODES
+EXIT_SUCCESS: int            = 0
+ERROR_GENERIC: int           = 1
+ERROR_UNNAMED_COMPONENT: int = 2
+
+
 ### FUNCTION DEFINITIONS ###
 
 def pox(
@@ -118,11 +126,6 @@ class Log:
     ### CONSTANTS & FLAGS ###
 
     LOG_STYLE_ERROR: str = Stylist.style('red', 'underline')
-
-    # EXIT/ERROR CODES
-    EXIT_SUCCESS: int            = 0
-    ERROR_GENERIC: int           = 1
-    ERROR_UNNAMED_COMPONENT: int = 2
 
 
     ### FUNCTION DEFINITIONS ###
