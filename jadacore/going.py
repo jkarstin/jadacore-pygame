@@ -13,10 +13,10 @@ from pathlib import Path
 import pygame
 from pygame import Vector2
 
+from jadacore.meta import PIXEL_SIZE, PIXEL_SIZE_SQUARED
 from jadacore.being import Component
 from jadacore.doing import Doing, Motor
 from jadacore.input import KeyInput, MouseInput
-from jadacore.meta import PIXEL_SIZE, PIXEL_SIZE_SQUARED
 
 
 ### CLASS STUBS ###

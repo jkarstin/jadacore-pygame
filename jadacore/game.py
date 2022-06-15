@@ -15,53 +15,98 @@ from pygame.event import Event
 from pygame.sprite import Group
 from pygame.time import Clock
 
+from jadacore.meta import WINDOW_SIZE
 from jadacore.being import Being
 from jadacore.interact import Interactable
-from jadacore.meta import WINDOW_SIZE
 
 
 ### CLASS STUBS ###
 
 class Game:
-    def __init__(self): ...
+    def __init__(self
+    ): ...
 class World:
-    def __init__(self): ...
+    def __init__(self
+    ): ...
+class Screen:
+    def __init__(self
+    ): ...
 class Window:
-    def __init__(self,
-        world: World=None
+    def __init__(self
     ): ...
 
 class Game:
     running: bool
     clock: Clock
     window: Window
-    def __init__(self): ...
-    def setup(self): ...
-    def handle_events(self, events: list[Event]): ...
-    def update(self, dt: float): ...
-    def run(self): ...
-    def set_world(self, world: World): ...
+    #input: Input
+    def __init__(self
+    ): ...
+    def setup(self
+    ): ...
+    def handle_events(self,
+        events: list[Event]
+    ): ...
+    def update(self,
+        dt: float
+    ): ...
+    def run(self
+    ): ...
+    def set_world(self,
+        world: World
+    ): ...
 class Window:
     size: Vector2
-    base_screen: Surface
-    world: World
-    def __init__(self,
-        world: World=None
+    screens: list[Screen]
+    active_screen_index: int
+    worlds: list[World]
+    active_world_index: int
+    def __init__(self
     ): ...
-    def update(self, dt: float): ...
-    def render(self): ...
-    def set_world(self, world: World): ...
+    def update(self,
+        dt: float
+    ): ...
+    def render(self
+    ): ...
+    def add_screen(self,
+        screen: Screen
+    ): ...
+    def set_screen(self,
+        screen: Screen
+    ): ...
+    def add_world(self,
+        world: World
+    ): ...
+    def set_world(self,
+        world: World
+    ): ...
+class Screen:
+    size: Vector2
+    base_surface: Surface
+    #input_manager: InputManager
+    def __init__(self
+    ): ...
 class World:
     world_group: Group
     interact_group: Group
     icon_group: Group
-    world_screen: Surface
-    def __init__(self): ...
-    def setup(self): ...
-    def update(self, dt: float): ...
-    def update_world(self, dt: float): ...
-    def draw(self, base_screen: Surface): ...
-    def add(self, *beings: Being): ...
+    clear_surface: Surface
+    def __init__(self
+    ): ...
+    def setup(self
+    ): ...
+    def update(self,
+        dt: float
+    ): ...
+    def update_world(self,
+        dt: float
+    ): ...
+    def draw(self,
+        base_screen: Surface
+    ): ...
+    def add(self,
+        *beings: Being
+    ): ...
 
 
 ### CLASS DEFINITIONS ###
@@ -84,12 +129,14 @@ class Game:
         self.setup()
 
 
-    ### OPERATIONAL METHODS ###
+    ### PLACEHOLDER METHODS ###
 
     def setup(self): pass
     def handle_events(self, events: list[Event]): pass
     def update(self, dt: float): pass
     
+
+    ### OPERATIONAL METHODS ###
 
     def run(self):
         """
@@ -131,38 +178,64 @@ class Window:
 
     ### FIELDS ###
 
-    size: Vector2        = None
-    base_screen: Surface = None
-    world: World         = None
+    size: Vector2            = None
+    screens: list[Screen]    = None
+    active_screen_index: int = None
+    worlds: list[World]      = None
+    active_world_index: int  = None
 
 
     ### CONSTRUCTOR ###
 
-    def __init__(self,
-        world: World=None
-    ):
+    def __init__(self):
         self.size = WINDOW_SIZE
-        self.base_screen = pygame.display.set_mode(WINDOW_SIZE)
-        self.world = world
+        self.screens = [pygame.display.set_mode(WINDOW_SIZE)]
+        self.active_screen_index = 0
+        self.worlds = []
+        self.active_world_index = -1
 
 
     ### OPERATIONAL FUNCTIONS ###
 
     def update(self, dt: float):
-        if self.world:
-            self.world.update(dt)
+        if self.active_world_index in range(len(self.worlds)):
+            self.worlds[self.active_world_index].update(dt)
 
     
     def render(self):
-        if self.world:
-            self.world.draw(self.base_screen)
+        if self.active_screen_index in range(len(self.screens)) and \
+            self.active_world_index in range(len(self.worlds)):
+            self.worlds[self.active_world_index].draw(self.screens[self.active_screen_index])
             pygame.display.flip()
 
 
     ### UTILITY FUNCTIONS ###
 
+    def add_screen(self,
+        screen: Screen
+    ):
+        if screen and screen not in self.screens:
+            self.screens.append(screen)
+
+
+    def set_screen(self,
+        screen: Screen
+    ):
+        self.add_screen(screen)
+        self.active_screen_index = self.screens.index(screen)
+
+
+    def add_world(self,
+        world: World
+    ):
+        if world and world not in self.worlds:
+            self.worlds.append(world)
+
+
     def set_world(self, world: World):
-        self.world = world
+        self.add_world(world)
+        self.active_world_index = self.worlds.index(world)
+        
 
 
 
@@ -170,10 +243,10 @@ class World:
 
     ### FIELDS ###
 
-    world_group: Group    = None
-    interact_group: Group = None
-    icon_group: Group     = None
-    world_screen: Surface = None
+    world_group: Group     = None
+    interact_group: Group  = None
+    icon_group: Group      = None
+    clear_surface: Surface = None
 
 
     ### CONSTRUCTOR ###
@@ -182,7 +255,7 @@ class World:
         self.world_group = Group()
         self.interact_group = Group()
         self.icon_group = Group()
-        self.world_screen = Surface(WINDOW_SIZE)
+        self.clear_surface = Surface(WINDOW_SIZE)
         self.setup()
 
 
@@ -190,7 +263,7 @@ class World:
 
     def setup(self): pass
 
-
+    
     def update(self, dt: float):
         self.update_world(dt)
         
@@ -200,16 +273,16 @@ class World:
         self.icon_group.update(dt)
 
     
-    def draw(self, base_screen: Surface):
-        self.world_group.clear(base_screen, self.world_screen)
-        self.icon_group.clear(base_screen, self.world_screen)
+    def draw(self, screen_surface: Surface):
+        self.world_group.clear(screen_surface, self.clear_surface)
+        self.icon_group.clear(screen_surface, self.clear_surface)
 
         for sprite in self.world_group.sprites():
             being: Being = sprite
             being.pre_render()
 
-        self.world_group.draw(base_screen)
-        self.icon_group.draw(base_screen)
+        self.world_group.draw(screen_surface)
+        self.icon_group.draw(screen_surface)
 
 
     ### UTILITY FUNCTIONS ###

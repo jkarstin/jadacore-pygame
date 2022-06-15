@@ -13,8 +13,8 @@ from pathlib import Path
 from pygame.sprite import Group
 import re
 
-from jadacore.interact import Interactable, KeyInteraction, Interactor, KeyInteractor
 from jadacore.util import Log
+from jadacore.interact import Interactable, KeyInteraction, Interactor, KeyInteractor
 
 
 ### CLASS STUBS ###

@@ -14,11 +14,11 @@ import pygame
 from pygame import Rect
 from pygame.sprite import Group, Sprite
 
+from jadacore.meta import PIXEL_SIZE
+import jadacore.util as util
 from jadacore.being import Component
 from jadacore.doing import Doing
 from jadacore.input import Input, KeyInput, MouseInput
-from jadacore.meta import PIXEL_SIZE
-import jadacore.util as util
 
 
 ### CLASS STUBS ###

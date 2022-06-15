@@ -12,9 +12,9 @@
 from pathlib import Path
 from pygame import Surface, Vector2
 
-from jadacore.being import Being, Component
 from jadacore.meta import PIXEL_SIZE
 import jadacore.util as util
+from jadacore.being import Being, Component
 
 
 ### CLASS STUBS ###

@@ -5,6 +5,25 @@
 ## Package Structure
 
 - jadacore
+  - jadacore.meta
+    - jadacore.meta.<ins>RESOURCES_PATH</ins>
+    - jadacore.meta.<ins>PIXEL_SIZE</ins>
+    - jadacore.meta.<ins>PIXEL_SIZE_SQUARED</ins>
+    - jadacore.meta.<ins>WINDOW_SIZE</ins>
+    - jadacore.meta.<ins>WINDOW_WIDTH</ins>
+    - jadacore.meta.<ins>WINDOW_HEIGHT</ins>
+  - jadacore.util
+    - jadacore.util.<ins>EXIT_SUCCESS</ins>,
+    - jadacore.util.<ins>ERROR_GENERIC</ins>,
+    - jadacore.util.<ins>ERROR_UNNAMED_COMPONENT</ins>    
+    - jadacore.util.*pox*
+    - jadacore.util.*load_pixel_image*
+    - jadacore.util.**Stylist**
+    - jadacore.util.**Log**
+  - jadacore.game
+    - jadacore.game.**Game**
+    - jadacore.game.**World**
+    - jadacore.game.**Window**
   - jadacore.being
     - jadacore.being.**Being**
     - jadacore.being.**Component**
@@ -38,30 +57,11 @@
     - jadacore.item.**ItemBeing**
     - jadacore.item.**Item**
     - jadacore.item.**Inventory**
-  - jadacore.game
-    - jadacore.game.**Game**
-    - jadacore.game.**World**
-    - jadacore.game.**Window**
-  - jadacore.meta
-    - jadacore.meta.<ins>RESOURCES_PATH</ins>
-    - jadacore.meta.<ins>PIXEL_SIZE</ins>
-    - jadacore.meta.<ins>PIXEL_SIZE_SQUARED</ins>
-    - jadacore.meta.<ins>WINDOW_SIZE</ins>
-    - jadacore.meta.<ins>WINDOW_WIDTH</ins>
-    - jadacore.meta.<ins>WINDOW_HEIGHT</ins>
   - jadacore.player
     - jadacore.player.**Player**
     - jadacore.player.**KeyPlayer**
     - jadacore.player.**SeekPlayer**
     - jadacore.player.**ClickPlayer**
-  - jadacore.util
-    - jadacore.util.<ins>EXIT_SUCCESS</ins>,
-    - jadacore.util.<ins>ERROR_GENERIC</ins>,
-    - jadacore.util.<ins>ERROR_UNNAMED_COMPONENT</ins>    
-    - jadacore.util.*pox*
-    - jadacore.util.*load_pixel_image*
-    - jadacore.util.**Stylist**
-    - jadacore.util.**Log**
 
 ---
 
