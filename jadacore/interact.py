@@ -1,9 +1,9 @@
 ##################################
-# _interact.py    [v0.0.1-alpha] #
+# interact.py     [v0.0.2-alpha] #
 #================================#
 #                                #
 #--------------------------------#
-# J Karstin Neill     06.03.2022 #
+# J Karstin Neill     06.14.2022 #
 ##################################
 
 
@@ -14,10 +14,11 @@ import pygame
 from pygame import Rect
 from pygame.sprite import Group, Sprite
 
+from jadacore.being import Component
+from jadacore.doing import Doing
+from jadacore.input import Input, KeyInput, MouseInput
 from jadacore.meta import PIXEL_SIZE
 import jadacore.util as util
-
-from . import Component, Doing, Input, KeyInput, MouseInput
 
 
 ### CLASS STUBS ###

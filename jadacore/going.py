@@ -1,9 +1,9 @@
 #################################
-# _going.py      [v0.0.1-alpha] #
+# going.py       [v0.0.2-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.03.2022 #
+# J Karstin Neill    06.14.2022 #
 #################################
 
 
@@ -13,14 +13,20 @@ from pathlib import Path
 import pygame
 from pygame import Vector2
 
+from jadacore.being import Component
+from jadacore.doing import Doing, Motor
+from jadacore.input import KeyInput, MouseInput
 from jadacore.meta import PIXEL_SIZE, PIXEL_SIZE_SQUARED
-
-from . import Component, Doing, Motor, KeyInput, MouseInput
 
 
 ### CLASS STUBS ###
 
-class Going(Doing):
+class Driving(Doing):
+    def __init__(self,
+        sprite_sheet_path: Path,
+        **kwargs
+    ): ...
+class Going(Driving):
     def __init__(self,
         sprite_sheet_path: Path,
         key_input: KeyInput=None,
@@ -31,7 +37,7 @@ class Going(Doing):
         move_speed: float=None,
         **kwargs
     ): ...
-class Seeking(Doing):
+class Seeking(Driving):
     def __init__(self,
         sprite_sheet_path: Path,
         move_speed: float=None,
@@ -65,7 +71,13 @@ class ClickSeeker(Seeker):
         **kwargs
     ): ...
 
-class Going(Doing):
+class Driving(Doing):
+    driver: Driver
+    def __init__(self,
+        sprite_sheet_path: Path,
+        **kwargs
+    ): ...
+class Going(Driving):
     driver: KeyDriver
     def __init__(self,
         sprite_sheet_path: Path,
@@ -77,7 +89,7 @@ class Going(Doing):
         move_speed: float=None,
         **kwargs
     ): ...
-class Seeking(Doing):
+class Seeking(Driving):
     driver: Seeker
     def __init__(self,
         sprite_sheet_path: Path,
@@ -148,7 +160,26 @@ DEFAULT_KEYS: dict[str, list[int]] = {
 
 ### CLASS DEFINITIONS ###
 
-class Going(Doing):
+class Driving(Doing):
+
+    ### FIELDS ###
+
+    driver: Driver = None
+
+
+    ### CONSTRUCTOR ###
+
+    def __init__(self,
+        sprite_sheet_path: Path,
+        **kwargs
+    ):
+        Doing.__init__(self,
+            sprite_sheet_path,
+            **kwargs
+        )
+
+
+class Going(Driving):
 
     ### FIELDS ###
 
@@ -167,7 +198,7 @@ class Going(Doing):
         move_speed: float=None,
         **kwargs
     ) -> None:
-        Doing.__init__(self,
+        Driving.__init__(self,
             sprite_sheet_path,
             **kwargs
         )
@@ -180,7 +211,7 @@ class Going(Doing):
 
 
 
-class Seeking(Doing):
+class Seeking(Driving):
 
     ### FIELDS ###
 
@@ -194,7 +225,7 @@ class Seeking(Doing):
         move_speed: float=None,
         **kwargs
     ):
-        Doing.__init__(self,
+        Driving.__init__(self,
             sprite_sheet_path,
             **kwargs
         )

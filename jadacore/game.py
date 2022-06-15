@@ -1,9 +1,9 @@
 #################################
-# _game.py       [v0.0.1-alpha] #
+# game.py        [v0.0.2-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.03.2022 #
+# J Karstin Neill    06.14.2022 #
 #################################
 
 
@@ -15,7 +15,8 @@ from pygame.event import Event
 from pygame.sprite import Group
 from pygame.time import Clock
 
-from jadacore.being import Being, Interactable
+from jadacore.being import Being
+from jadacore.interact import Interactable
 from jadacore.meta import WINDOW_SIZE
 
 

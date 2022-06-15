@@ -1,9 +1,9 @@
 #################################
-# _input.py      [v0.0.1-alpha] #
+# input.py       [v0.0.2-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.03.2022 #
+# J Karstin Neill    06.14.2022 #
 #################################
 
 
@@ -13,7 +13,7 @@ from typing import Callable
 import pygame
 from pygame import Vector2
 
-from . import Component
+from jadacore.being import Component
 
 
 ### CLASS STUBS ###

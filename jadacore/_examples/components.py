@@ -1,15 +1,16 @@
 ###################################
-# components.py    [v0.0.1-alpha] #
+# components.py    [v0.0.2-alpha] #
 #=================================#
 #                                 #
 #---------------------------------#
-# J Karstin Neill      06.03.2022 #
+# J Karstin Neill      06.14.2022 #
 ###################################
 
 
 ### IMPORTS ###
 
-from jadacore.being import *
+from jadacore.being import Being
+from jadacore.going import KeyDriver
 from jadacore.game import Game, World
 
 

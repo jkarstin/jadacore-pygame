@@ -1,9 +1,9 @@
 #################################
-# _being.py      [v0.0.1-alpha] #
+# being.py       [v0.0.2-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.03.2022 #
+# J Karstin Neill    06.14.2022 #
 #################################
 
 
@@ -16,8 +16,7 @@ from pygame.sprite import Group, Sprite
 
 from jadacore.meta import RESOURCES_PATH, PIXEL_SIZE
 import jadacore.util as util
-import jadacore.util.log as log
-from jadacore.util import ERROR_UNNAMED_COMPONENT
+from jadacore.util import Log
 
 
 ### CLASS STUBS ###
@@ -293,7 +292,7 @@ class Component:
         --------
         - <Component> - Instance of Component class.
         """
-        if not name: log.error("Cannot initialize Component without a name!", ERROR_UNNAMED_COMPONENT)
+        if not name: Log.error("Cannot initialize Component without a name!", Log.ERROR_UNNAMED_COMPONENT)
         self.name = name
 
     

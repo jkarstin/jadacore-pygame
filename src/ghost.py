@@ -1,9 +1,9 @@
 #################################
-# ghost.py       [v0.0.1-alpha] #
+# ghost.py       [v0.0.2-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.03.2022 #
+# J Karstin Neill    06.14.2022 #
 #################################
 
 
@@ -11,7 +11,7 @@
 
 from pygame import Vector2
 
-from jadacore.being import Doing
+from jadacore.doing import Doing
 
 
 ### CLASS DEFINITIONS ###

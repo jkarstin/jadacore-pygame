@@ -1,9 +1,9 @@
 #################################
-# _player.py     [v0.0.1-alpha] #
+# player.py      [v0.0.2-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.03.2022 #
+# J Karstin Neill    06.14.2022 #
 #################################
 
 
@@ -13,22 +13,18 @@ from pathlib import Path
 from pygame import Vector2
 from pygame.sprite import Group
 
-from jadacore.being import (
-    Doing,
-    KeyInput, MouseInput,
-    Driver, KeyDriver, Seeker, ClickSeeker,
-    ItemBeing, Item, Inventory,
-)
+from jadacore.input import KeyInput, MouseInput
+from jadacore.going import Driving, Going, Seeking, Driver, KeyDriver, Seeker, ClickSeeker
+from jadacore.item import ItemBeing, Item, Inventory
 
 
 ### CLASS STUB ###
 
-class Player(Doing):
+class Player(Driving):
     def __init__(self,
         interact_group: Group,
         icon_group: Group,
         sprite_sheet_path: Path,
-        driver: Driver=None,
         reach: float=None,
         **kwargs
     ): ...
@@ -57,15 +53,13 @@ class ClickPlayer(SeekPlayer):
         **kwargs
     ): ...
 
-class Player(Doing):
+class Player(Driving):
     inventory: Inventory
     key_input: KeyInput
-    driver: Driver
     def __init__(self,
         interact_group: Group,
         icon_group: Group,
         sprite_sheet_path: Path,
-        driver: Driver=None,
         reach: float=None,
         **kwargs
     ): ...
@@ -104,7 +98,7 @@ class ClickPlayer(SeekPlayer):
 
 ### CLASS DEFINITIONS ###
 
-class Player(Doing):
+class Player(Driving):
     """
     Description:
     ------------
@@ -124,7 +118,6 @@ class Player(Doing):
 
     inventory: Inventory   = None
     key_input: KeyInput    = None
-    driver: Driver         = None
 
 
     ### CONSTRUCTOR ###
@@ -170,7 +163,7 @@ class Player(Doing):
         --------
         - <Player> - Instance of Player class.
         """
-        Doing.__init__(self,
+        Driving.__init__(self,
             sprite_sheet_path,
             **kwargs
         )
@@ -183,11 +176,6 @@ class Player(Doing):
             reach=reach, key_input=self.key_input
         )
         self.attach(self.inventory)
-
-        if driver:
-            self.driver = driver
-            self.driver.set_motor(self.motor)
-            self.attach(self.driver)
 
     
     ### OPERATIONAL METHODS ###

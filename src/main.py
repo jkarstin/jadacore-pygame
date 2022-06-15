@@ -1,9 +1,9 @@
 #################################
-# main.py        [v0.0.1-alpha] #
+# main.py        [v0.0.2-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    05.13.2022 #
+# J Karstin Neill    06.14.2022 #
 #################################
 
 
@@ -12,7 +12,7 @@
 import sys
 
 from jadacore.game import Game
-from jadacore.util import EXIT_SUCCESS
+from jadacore.util import Log
 
 from start_world import StartWorld
 
@@ -35,7 +35,7 @@ def main(argv: list[str], argc: int) -> int:
     game: Game = TransPlanarGame()
     game.run()
 
-    return EXIT_SUCCESS
+    return Log.EXIT_SUCCESS
 
 
 ### UTILITY FUNCTIONS ###

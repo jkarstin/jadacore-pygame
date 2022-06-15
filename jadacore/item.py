@@ -1,9 +1,9 @@
 #################################
-# _item.py       [v0.0.1-alpha] #
+# item.py        [v0.0.2-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.03.2022 #
+# J Karstin Neill    06.14.2022 #
 #################################
 
 
@@ -13,13 +13,8 @@ from pathlib import Path
 from pygame.sprite import Group
 import re
 
-import jadacore.util.log as log
-
-from . import (
-    Interactable,
-    KeyInteraction,
-    Interactor, KeyInteractor
-)
+from jadacore.interact import Interactable, KeyInteraction, Interactor, KeyInteractor
+from jadacore.util import Log
 
 
 ### CLASS STUBS ###
@@ -182,7 +177,7 @@ class Item(KeyInteraction):
 
     def interact(self, interactor: Interactor):
         if self.being and interactor:
-            log.sprint(f"Being {self.being} with Item {self} interacted with by: {interactor}")
+            Log.sprint(f"Being {self.being} with Item {self} interacted with by: {interactor}")
 
             if isinstance(interactor, Inventory):
                 inventory: Inventory = interactor

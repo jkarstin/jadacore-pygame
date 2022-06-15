@@ -1,9 +1,9 @@
 #################################
-# _doing.py      [v0.0.1-alpha] #
+# doing.py       [v0.0.2-alpha] #
 #===============================#
 #                               #
 #-------------------------------#
-# J Karstin Neill    06.03.2022 #
+# J Karstin Neill    06.14.2022 #
 #################################
 
 
@@ -12,10 +12,9 @@
 from pathlib import Path
 from pygame import Surface, Vector2
 
+from jadacore.being import Being, Component
 from jadacore.meta import PIXEL_SIZE
 import jadacore.util as util
-
-from . import Being, Component
 
 
 ### CLASS STUBS ###

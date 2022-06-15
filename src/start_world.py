@@ -1,9 +1,9 @@
 ####################################
-# start_world.py    [v0.0.1-alpha] #
+# start_world.py    [v0.0.2-alpha] #
 #==================================#
 #                                  #
 #----------------------------------#
-# J Karstin Neill       06.03.2022 #
+# J Karstin Neill       06.14.2022 #
 ####################################
 
 
@@ -11,8 +11,8 @@
 
 from pygame import Vector2
 
-from jadacore.being  import ItemBeing
 from jadacore.game   import World
+from jadacore.item  import ItemBeing
 from jadacore.player import ClickPlayer
 
 from ghost import Ghost
